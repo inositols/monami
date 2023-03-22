@@ -19,6 +19,8 @@ class Authenticator {
   String get displayName => user.currentUser?.displayName ?? '';
   String? get email => user.currentUser?.email;
 
+  Stream<User?> get authStateChange => user.authStateChanges();
+
   Future<void> logout() async {
     await user.signOut();
     await GoogleSignIn().signOut();
