@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monami/state/auth/providers/auth_state_provider.dart';
+import 'package:monami/views/bottomnavigation/bottom_navigation_screen.dart';
 import 'package:monami/views/home_view.dart';
 
 enum Status {
@@ -24,6 +25,7 @@ class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _username = TextEditingController();
 
   //  A loading variable to show the loading animation when you a function is ongoing
   bool _isLoading = false;
@@ -59,7 +61,7 @@ class _LoginViewState extends State<LoginView> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Consumer(builder: (context, ref, _) {
-          final _auth = ref.watch(authenticationProvider);
+          // final _auth = ref.watch(authenticationProvider);
 
           Future<void> _onPressedFunction() async {
             if (!_formKey.currentState!.validate()) {
@@ -67,34 +69,37 @@ class _LoginViewState extends State<LoginView> {
             }
 
             if (type == Status.login) {
-              loading();
-              await _auth
-                  .loginWithEmail(_email.text, _password.text)
-                  .whenComplete(
-                      () => _auth.authStateChange.listen((event) async {
-                            if (event == null) {
-                              loading();
-                              return;
-                            }
-                          }));
+              // loading();
+              // await _auth
+              //     .loginWithEmail(_email.text, _password.text)
+              //     .whenComplete(
+              //         () => _auth.authStateChange.listen((event) async {
+              //               if (event == null) {
+              //                 loading();
+              //                 return;
+              //               }
+              //             }));
             } else {
               loading();
-              await _auth.signUp(_email.text, _password.text).whenComplete(() =>
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => HomeView())));
+              await ref
+                  .read(authStateProvider.notifier)
+                  .signUp(_email.text, _password.text, _username.text)
+                  .whenComplete(() => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (_) => const BottomNavigation())));
             }
           }
 
           Future<void> _loginWithGoogle() async {
-            loading2();
-            await _auth
-                .loginWithGoogle()
-                .whenComplete(() => _auth.authStateChange.listen((event) async {
-                      if (event == null) {
-                        loading2();
-                        return;
-                      }
-                    }));
+            // loading2();
+            // await _auth
+            //     .loginWithGoogle()
+            //     .whenComplete(() => _auth.authStateChange.listen((event) async {
+            //           if (event == null) {
+            //             loading2();
+            //             return;
+            //           }
+            //         }));
           }
 
           return Form(
@@ -102,18 +107,50 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Container(
-                    margin: const EdgeInsets.only(top: 48),
+                    margin: const EdgeInsets.only(top: 40),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Center(child: FlutterLogo(size: 81)),
                         const Spacer(flex: 1),
+                        if (type == Status.signUp)
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 4),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: TextFormField(
+                              controller: _username,
+                              autocorrect: true,
+                              enableSuggestions: true,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) {},
+                              decoration: InputDecoration(
+                                hintText: 'Username',
+                                hintStyle:
+                                    const TextStyle(color: Colors.black54),
+                                icon: Icon(Icons.person,
+                                    color: Colors.blue.shade700, size: 24),
+                                alignLabelWithHint: true,
+                                border: InputBorder.none,
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'username cannot be empty';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
                         Container(
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16),
+                              horizontal: 24, vertical: 10),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 4),
                           decoration: BoxDecoration(

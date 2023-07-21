@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: ">=2.18.6 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,22 +29,23 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cloud_firestore: 4.3.1
-  collection: 1.16.0
+  cloud_firestore: null
+  collection: null
   cupertino_icons: ^1.0.2
-  firebase_auth: 4.2.5
-  firebase_core: 2.4.1
-  firebase_storage: 11.0.10
+  device_preview: null
+  firebase_auth: null
+  firebase_core: null
+  firebase_storage: null
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
-  font_awesome_flutter: ^10.4.0
+  font_awesome_flutter:
   google_fonts: ^4.0.3
   google_sign_in: ^6.0.2
   hooks_riverpod: ^2.3.0
-  image: ^4.0.15
+  image: null
   image_picker: ^0.8.6+4
-  intl: 0.17.0
+  intl: 0.18.0
   lottie: ^2.2.0
   share_plus: ^6.3.1
   url_launcher: ^6.1.10
@@ -53,12 +54,6 @@ dependencies:
   video_thumbnail: ^0.5.3
 
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -67,7 +62,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
