@@ -1,98 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/state/auth/providers/auth_state_provider.dart';
+import 'dart:developer' as devtools show log;
 
-// extension log on
+import 'package:monami/state/image_upload/helpers/image_upload_helper.dart';
+import 'package:monami/state/image_upload/models/file_type.dart';
+import 'package:monami/state/post_settings/providers/post_settings_provider.dart';
+import 'package:monami/views/create_post/create_new_post.dart';
+import 'package:monami/views/dialogs/alert_dialog_model.dart';
+import 'package:monami/views/dialogs/logout.dart';
 
-class HomeView extends ConsumerWidget {
+extension Log on Object {
+  void log() => devtools.log(toString());
+}
+
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-              width: double.maxFinite,
-              height: 150,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.blue.shade900),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Text(
-                      'Monami',
-                      style: GoogleFonts.raleway(
-                        fontSize: 23,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.image,
-                      color: Colors.white,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      ref.read(authStateProvider.notifier).logOut();
-                    },
-                    icon: const Icon(
-                      Icons.logout,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-              ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Monami"),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                final videoFile =
+                    await ImagePickerHelper.pickerVideoFromGallery();
+                if (videoFile == null) {
+                  return;
+                }
+                ref.refresh(postSettingProvider);
+                if (!mounted) {
+                  return;
+                }
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(
+                    builder: (_) => CreateNewPostView(
+                          fileToPost: videoFile,
+                          fileType: FileType.video,
+                        )));
+              },
+              icon: const FaIcon(FontAwesomeIcons.film),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                physics: const BouncingScrollPhysics(),
-                itemCount: 50,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 5),
-                    height: 100,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // margin: const EdgeInsets.only(top: 5),
-                          width: 100,
-                          height: 100,
-                          color: Colors.red,
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            title: Text(
-                              'Okama Innocent',
-                              style: GoogleFonts.raleway(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
-            )
+            IconButton(
+              onPressed: () async {
+                final imageFile =
+                    await ImagePickerHelper.pickerImageFromGallery();
+                if (imageFile == null) {
+                  return;
+                }
+                ref.refresh(postSettingProvider);
+                if (!mounted) {
+                  return;
+                }
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(
+                    builder: (_) => CreateNewPostView(
+                          fileToPost: imageFile,
+                          fileType: FileType.image,
+                        )));
+              },
+              icon: const Icon(Icons.add_photo_alternate_outlined),
+            ),
+            IconButton(
+              onPressed: () async {
+                final shouldLogout = await const LogoutDialog()
+                    .present(context)
+                    .then((value) => value ?? false);
+
+                if (shouldLogout) {
+                  await ref.read(authStateProvider.notifier).logOut();
+                }
+              },
+              icon: const Icon(Icons.logout),
+            ),
           ],
         ),
-      ),
-    );
+        body: Container()
+        // Consumer(builder: (context, ref, child) {
+        //   return TextButton(
+        //       onPressed: () async {
+        //         // LoadingScreen.instance()
+        //         //     .show(context: context, text: "Loading...");
+        //         await ref.read(authStateProvider.notifier).logOut();
+        //       },
+        //       child: const Text('Logout'));
+        // }),
+        );
   }
 }

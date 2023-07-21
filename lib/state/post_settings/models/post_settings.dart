@@ -1,4 +1,4 @@
-import 'package:monami/state/post_settings/models/constants/strings.dart';
+import 'package:monami/state/post_settings/constants/strings.dart';
 
 enum PostSetting {
   allowLikes(
