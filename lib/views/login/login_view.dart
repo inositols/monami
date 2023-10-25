@@ -126,6 +126,9 @@ class _LoginViewState extends State<LoginView> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(25)),
                             child: TextFormField(
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
                               controller: _username,
                               autocorrect: true,
                               enableSuggestions: true,
@@ -157,6 +160,9 @@ class _LoginViewState extends State<LoginView> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(25)),
                           child: TextFormField(
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
                             controller: _email,
                             autocorrect: true,
                             enableSuggestions: true,
@@ -189,6 +195,9 @@ class _LoginViewState extends State<LoginView> {
                           child: TextFormField(
                             controller: _password,
                             obscureText: true,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
                             validator: (value) {
                               if (value!.isEmpty || value.length < 8) {
                                 return 'Password is too short!';
@@ -216,6 +225,9 @@ class _LoginViewState extends State<LoginView> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(25)),
                             child: TextFormField(
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: 'Confirm password',
@@ -259,13 +271,6 @@ class _LoginViewState extends State<LoginView> {
                                     child: CircularProgressIndicator())
                                 : MaterialButton(
                                     onPressed: _onPressedFunction,
-                                    child: Text(
-                                      type == Status.login
-                                          ? 'Log in'
-                                          : 'Sign up',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
                                     textColor: Colors.blue.shade700,
                                     textTheme: ButtonTextTheme.primary,
                                     minWidth: 100,
@@ -274,6 +279,13 @@ class _LoginViewState extends State<LoginView> {
                                       borderRadius: BorderRadius.circular(25),
                                       side: BorderSide(
                                           color: Colors.blue.shade700),
+                                    ),
+                                    child: Text(
+                                      type == Status.login
+                                          ? 'Log in'
+                                          : 'Sign up',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ),
                           ),
@@ -286,10 +298,19 @@ class _LoginViewState extends State<LoginView> {
                                     child: CircularProgressIndicator())
                                 : MaterialButton(
                                     onPressed: _loginWithGoogle,
-                                    child: Row(
+                                    textColor: Colors.blue.shade700,
+                                    textTheme: ButtonTextTheme.primary,
+                                    minWidth: 100,
+                                    padding: const EdgeInsets.all(18),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(
+                                          color: Colors.blue.shade700),
+                                    ),
+                                    child: const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         //  A google icon here
                                         //  an External Package used here
                                         //  Font_awesome_flutter package used
@@ -300,15 +321,6 @@ class _LoginViewState extends State<LoginView> {
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ],
-                                    ),
-                                    textColor: Colors.blue.shade700,
-                                    textTheme: ButtonTextTheme.primary,
-                                    minWidth: 100,
-                                    padding: const EdgeInsets.all(18),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                          color: Colors.blue.shade700),
                                     ),
                                   ),
                           ),
