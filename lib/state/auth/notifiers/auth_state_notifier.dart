@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/state/user_info/typedefs/backend/users_info_storage.dart';
 import 'package:monami/state/user_info/typedefs/user_id.dart';
+import 'package:monami/utils/router/route_name.dart';
+
 import '../backend/authenticator.dart';
 import '../models/auth_result.dart';
 import '../models/auth_state.dart';
@@ -23,6 +25,29 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     state = state.copiedWithIsLoading(true);
     await _authenticator.logout();
     state = const AuthState.unknown();
+    _authenticator.navigationHandler.pushReplacementNamed(loginRoute);
+  }
+
+  Future<void> login(
+    String email,
+    String password,
+  ) async {
+    state = state.copiedWithIsLoading(true);
+    final result = await _authenticator.loginWithEmail(
+      email,
+      password,
+    );
+    final userId = _authenticator.userId;
+    if (result == AuthResult.success && userId != null) {
+      //move to them to the homescreen
+      _authenticator.navigationHandler.pushNamed(home);
+      _authenticator.showSnackBar("Login successfully");
+    }
+    state = AuthState(
+      result: result,
+      isLoading: false,
+      userId: _authenticator.userId,
+    );
   }
 
   Future<void> signUp(String email, String password, String username) async {
@@ -38,20 +63,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         displayName: username,
         email: email,
       );
-    }
-    state = AuthState(
-      result: result,
-      isLoading: false,
-      userId: _authenticator.userId,
-    );
-  }
-
-  Future<void> loginWithGoogle() async {
-    state = state.copiedWithIsLoading(true);
-    final result = await _authenticator.loginWithGoogle();
-    final userId = _authenticator.userId;
-    if (result == AuthResult.success && userId != null) {
-      await saveUserInfo(userId: userId);
+      await _authenticator.navigationHandler.pushNamed(home);
     }
     state = AuthState(
       result: result,

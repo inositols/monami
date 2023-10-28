@@ -2,10 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monami/state/auth/providers/auth_state_provider.dart';
-import 'package:monami/views/bottomnavigation/bottom_navigation_screen.dart';
-import 'package:monami/views/home_view.dart';
 
 enum Status {
   login,
@@ -63,43 +60,22 @@ class _LoginViewState extends State<LoginView> {
         child: Consumer(builder: (context, ref, _) {
           // final _auth = ref.watch(authenticationProvider);
 
-          Future<void> _onPressedFunction() async {
+          Future<void> onPressedFunction() async {
             if (!_formKey.currentState!.validate()) {
               return;
             }
 
             if (type == Status.login) {
-              // loading();
-              // await _auth
-              //     .loginWithEmail(_email.text, _password.text)
-              //     .whenComplete(
-              //         () => _auth.authStateChange.listen((event) async {
-              //               if (event == null) {
-              //                 loading();
-              //                 return;
-              //               }
-              //             }));
+              loading();
+              await ref
+                  .read(authStateProvider.notifier)
+                  .login(_email.text, _password.text);
             } else {
               loading();
               await ref
                   .read(authStateProvider.notifier)
-                  .signUp(_email.text, _password.text, _username.text)
-                  .whenComplete(() => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (_) => const BottomNavigation())));
+                  .signUp(_email.text, _password.text, _username.text);
             }
-          }
-
-          Future<void> _loginWithGoogle() async {
-            // loading2();
-            // await _auth
-            //     .loginWithGoogle()
-            //     .whenComplete(() => _auth.authStateChange.listen((event) async {
-            //           if (event == null) {
-            //             loading2();
-            //             return;
-            //           }
-            //         }));
           }
 
           return Form(
@@ -126,6 +102,9 @@ class _LoginViewState extends State<LoginView> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(25)),
                             child: TextFormField(
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
                               controller: _username,
                               autocorrect: true,
                               enableSuggestions: true,
@@ -157,6 +136,9 @@ class _LoginViewState extends State<LoginView> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(25)),
                           child: TextFormField(
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
                             controller: _email,
                             autocorrect: true,
                             enableSuggestions: true,
@@ -189,6 +171,9 @@ class _LoginViewState extends State<LoginView> {
                           child: TextFormField(
                             controller: _password,
                             obscureText: true,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
                             validator: (value) {
                               if (value!.isEmpty || value.length < 8) {
                                 return 'Password is too short!';
@@ -216,6 +201,9 @@ class _LoginViewState extends State<LoginView> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(25)),
                             child: TextFormField(
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: 'Confirm password',
@@ -258,57 +246,22 @@ class _LoginViewState extends State<LoginView> {
                                 ? const Center(
                                     child: CircularProgressIndicator())
                                 : MaterialButton(
-                                    onPressed: _onPressedFunction,
+                                    onPressed: onPressedFunction,
+                                    textColor: Colors.blue.shade700,
+                                    textTheme: ButtonTextTheme.primary,
+                                    minWidth: 100,
+                                    padding: const EdgeInsets.all(18),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(
+                                          color: Colors.blue.shade700),
+                                    ),
                                     child: Text(
                                       type == Status.login
                                           ? 'Log in'
                                           : 'Sign up',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w600),
-                                    ),
-                                    textColor: Colors.blue.shade700,
-                                    textTheme: ButtonTextTheme.primary,
-                                    minWidth: 100,
-                                    padding: const EdgeInsets.all(18),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                          color: Colors.blue.shade700),
-                                    ),
-                                  ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 32.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            width: double.infinity,
-                            child: _isLoading2
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : MaterialButton(
-                                    onPressed: _loginWithGoogle,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        //  A google icon here
-                                        //  an External Package used here
-                                        //  Font_awesome_flutter package used
-                                        FaIcon(FontAwesomeIcons.google),
-                                        Text(
-                                          ' Login with Google',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                    textColor: Colors.blue.shade700,
-                                    textTheme: ButtonTextTheme.primary,
-                                    minWidth: 100,
-                                    padding: const EdgeInsets.all(18),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                          color: Colors.blue.shade700),
                                     ),
                                   ),
                           ),

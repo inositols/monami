@@ -37,6 +37,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 if (videoFile == null) {
                   return;
                 }
+                // ignore: unused_result
                 ref.refresh(postSettingProvider);
                 if (!mounted) {
                   return;
@@ -58,6 +59,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 if (imageFile == null) {
                   return;
                 }
+                // ignore: unused_result
                 ref.refresh(postSettingProvider);
                 if (!mounted) {
                   return;

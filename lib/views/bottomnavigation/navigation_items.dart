@@ -12,10 +12,16 @@ class NavigatorItem {
 }
 
 List<NavigatorItem> navigatorItems = [
+  // ignore: deprecated_member_use
   NavigatorItem("Home", FontAwesomeIcons.homeAlt, 0, const HomeView()),
+  // ignore: deprecated_member_use
   NavigatorItem("Search", FontAwesomeIcons.search, 1, Container()),
   NavigatorItem("Message", FontAwesomeIcons.message, 2, Container()),
   NavigatorItem("Profile", FontAwesomeIcons.person, 3, Container()),
   NavigatorItem(
-      "Settings", FontAwesomeIcons.gripHorizontal, 4, const HomeView()),
+      "Settings",
+      // ignore: deprecated_member_use
+      FontAwesomeIcons.gripHorizontal,
+      4,
+      const HomeView()),
 ];

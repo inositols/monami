@@ -29,11 +29,12 @@ class UserInfoStorage {
         return true;
       }
       final payload = UserInfoPayload(
-          userId: userId,
-          displayName: displayName,
-          email: email,
-          phoneNumber: "",
-          role: "user");
+        userId: userId,
+        displayName: displayName,
+        email: email,
+        phoneNumber: "",
+        role: "user",
+      );
       await FirebaseFirestore.instance
           .collection(FirebaseCollectionName.users)
           .add(
