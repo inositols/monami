@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pubspec.yaml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1699963063412,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1699963063412,
+            "name": "Commit-0",
+            "content": "name: monami\ndescription: A new Flutter project.\n\npublish_to: \"none\" # Remove this line if you wish to publish to pub.dev\n\nversion: 1.0.0+1\n\nenvironment:\n  sdk: \">=3.0.3 <4.0.0\"\n\ndependencies:\n  cloud_firestore: null\n  collection: null\n  cupertino_icons: ^1.0.2\n  device_preview: null\n  firebase_auth: null\n  firebase_core: null\n  firebase_storage: null\n  get_it: ^7.6.0\n  flutter:\n    sdk: flutter\n  flutter_hooks: ^0.18.6\n  font_awesome_flutter:\n  google_fonts: ^5.1.0\n  google_sign_in: ^6.0.2\n  hooks_riverpod: ^2.3.0\n  image: null\n  image_picker: ^1.0.1\n  intl: 0.18.0\n  lottie: ^2.2.0\n  share_plus: ^7.0.2\n  url_launcher: ^6.1.10\n  uuid: ^3.0.7\n  video_player: ^2.6.0\n  video_thumbnail: ^0.5.3\n  equatable: ^2.0.5\n\ndev_dependencies:\n  flutter_lints: ^2.0.0\n  flutter_test:\n    sdk: flutter\n\nflutter:\n  uses-material-design: true\n\n  assets:\n    - assets/images/\n    - assets/animations/loading.json\n    - assets/animations/error.json\n    - assets/animations/small_error.json\n    - assets/animations/empty.json\n    - assets/animations/data_not_found.json\n"
+        }
+    ]
+}
