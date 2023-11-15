@@ -11,6 +11,8 @@ import 'package:monami/views/create_post/create_new_post.dart';
 import 'package:monami/views/dialogs/alert_dialog_model.dart';
 import 'package:monami/views/dialogs/logout.dart';
 
+import 'user_post/user_post_view.dart';
+
 extension Log on Object {
   void log() => devtools.log(toString());
 }
@@ -88,7 +90,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ],
         ),
-        body: Container()
+        body: const UserPostView()
         // Consumer(builder: (context, ref, child) {
         //   return TextButton(
         //       onPressed: () async {
