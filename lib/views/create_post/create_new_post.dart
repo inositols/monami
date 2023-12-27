@@ -59,6 +59,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ? () async {
                     // get the user id first
                     final userId = ref.read(userIdProvider);
+                    print(userId!);
                     if (userId == null) {
                       return;
                     }
