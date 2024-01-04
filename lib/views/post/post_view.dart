@@ -11,29 +11,25 @@ class PostGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: posts.length,
-      padding: const EdgeInsets.all(8.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
-      ),
-      itemBuilder: (context, index) {
-        final post = posts.elementAt(index);
-        return PostThumbnailView(
-            post: post,
-            onTapped: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostDetailsView(
-                    post: post,
+    return ListView.separated(
+        padding: const EdgeInsets.only(left: 10),
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          final post = posts.elementAt(index);
+          return PostThumbnailView(
+              post: post,
+              onTapped: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDetailsView(
+                      post: post,
+                    ),
                   ),
-                ),
-              );
-            });
-      },
-    );
+                );
+              });
+        },
+        separatorBuilder: (context, index) =>
+            const Text("🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉"));
   }
 }

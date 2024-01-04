@@ -51,3 +51,4 @@ flutter:
     - assets/animations/small_error.json
     - assets/animations/empty.json
     - assets/animations/data_not_found.json
+    - shorebird.yaml
