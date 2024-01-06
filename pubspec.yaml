@@ -9,6 +9,7 @@ environment:
   sdk: ">=3.0.3 <4.0.0"
 
 dependencies:
+  animated_text_kit: ^4.2.2
   cloud_firestore: null
   collection: null
   cupertino_icons: ^1.0.2

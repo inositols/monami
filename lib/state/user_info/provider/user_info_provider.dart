@@ -9,7 +9,7 @@ import 'package:monami/state/post/typedefs/user_id.dart';
 import 'package:monami/state/user_info/models/user_info_model.dart';
 
 final userInfoModelProvider = StreamProvider.family
-    .autoDispose<UserInfoModel, UserId>((ref, UserId userId) {
+    .autoDispose<UserInfoModel, UserId?>((ref, UserId? userId) {
   final controller = StreamController<UserInfoModel>();
 
   final sub = FirebaseFirestore.instance
@@ -27,7 +27,7 @@ final userInfoModelProvider = StreamProvider.family
     final json = doc.data();
     final userInfoModel = UserInfoModel.fromJson(
       json,
-      userId: userId,
+      userId: userId!,
     );
     controller.sink.add(userInfoModel);
   });
