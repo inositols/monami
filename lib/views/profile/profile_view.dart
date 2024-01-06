@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:monami/state/auth/providers/user_id_provider.dart';
+import 'package:monami/state/post/typedefs/user_id.dart';
+import 'package:monami/state/user_info/provider/user_info_provider.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -59,13 +63,21 @@ class ProfileView extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "Inositol",
-                      style: GoogleFonts.leagueSpartan(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 26,
-                          color: Colors.white),
-                    ),
+                    Consumer(builder: (context, ref, _) {
+                      final id = ref.watch(userIdProvider);
+                      final user = ref.watch(userInfoModelProvider(id));
+
+                      return user.when(
+                          data: (user) => Text(
+                                user.displayName,
+                                style: GoogleFonts.leagueSpartan(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 26,
+                                    color: Colors.white),
+                              ),
+                          error: (error, stackTrace) => Text(error.toString()),
+                          loading: () => const LinearProgressIndicator());
+                    })
                   ],
                 ),
               ),

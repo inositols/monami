@@ -2,7 +2,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/state/user_info/typedefs/backend/users_info_storage.dart';
 import 'package:monami/state/user_info/typedefs/user_id.dart';
 import 'package:monami/utils/router/route_name.dart';
-
 import '../backend/authenticator.dart';
 import '../models/auth_result.dart';
 import '../models/auth_state.dart';
@@ -40,7 +39,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     final userId = _authenticator.userId;
     if (result == AuthResult.success && userId != null) {
       //move to them to the homescreen
-      _authenticator.navigationHandler.pushNamed(home);
+
+      await _authenticator.navigationHandler.pushNamed(home);
       _authenticator.showSnackBar("Login successfully");
     }
     state = AuthState(
@@ -63,6 +63,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         displayName: username,
         email: email,
       );
+      _authenticator.showSnackBar("Account created successfully");
       await _authenticator.navigationHandler.pushNamed(home);
     }
     state = AuthState(

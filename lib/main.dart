@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider1);
+    final authState = ref.watch(authenticationChangesProvider);
     return MaterialApp(
       title: 'Monami',
       darkTheme: ThemeData.dark(),
@@ -39,18 +39,12 @@ class MyApp extends ConsumerWidget {
       onGenerateRoute: generateRoute,
       navigatorKey: locator<NavigationService>().navigatorKey,
       home: authState.when(
-        data: (user) {
-          if (user != null) return const BottomNavigation();
-          return const LoginView();
-        },
-        error: (error, stackTrace) {
-          return Text(error.toString());
-        },
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+        data: (user) =>
+            user != null ? const BottomNavigation() : const LoginView(),
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
