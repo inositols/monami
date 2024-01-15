@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/auth/providers/user_id_provider.dart';
-import 'package:monami/state/comments/models/comments.dart';
-import 'package:monami/state/comments/providers/delete_comment_provider.dart';
+import 'package:monami/src/features/auth/providers/user_id_provider.dart';
+import 'package:monami/src/features/comments/models/comments.dart';
+import 'package:monami/src/features/comments/providers/delete_comment_provider.dart';
 import 'package:monami/state/user_info/provider/user_info_provider.dart';
 import 'package:monami/views/components/animation/models/small_error_animation.dart';
 import 'package:monami/views/components/constants/strings.dart';

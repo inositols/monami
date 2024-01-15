@@ -3,8 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/state/constants/firebase_collection.dart';
 import 'package:monami/state/constants/firebase_field_name.dart';
-import 'package:monami/state/image_upload/extension/get_collectionname_from_file_type.dart';
-import 'package:monami/state/image_upload/typedef/is_loading.dart';
+import 'package:monami/src/features/image_upload/extension/get_collectionname_from_file_type.dart';
+import 'package:monami/src/features/image_upload/typedef/is_loading.dart';
 import 'package:monami/state/post/models/post.dart';
 import 'package:monami/state/post/typedefs/post_id.dart';
 

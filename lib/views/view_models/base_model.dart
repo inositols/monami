@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:monami/handlers/navigation_handler.dart';
-import 'package:monami/handlers/snack_bar_handler.dart';
+import 'package:monami/src/handlers/navigation_handler.dart';
+import 'package:monami/src/handlers/snack_bar_handler.dart';
+import 'package:monami/src/utils/router/locator.dart';
 import 'package:monami/state/api_response.dart';
-import 'package:monami/utils/router/locator.dart';
 
-///Base view model with shared dependencies injected.
-///All view models must extends this class.
 class BaseViewModel extends ChangeNotifier {
   late NavigationService navigationHandler;
   late SnackbarHandler snackbarHandler;

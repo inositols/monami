@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/likes/providers/post_likes_count_provider.dart';
+import 'package:monami/src/features/likes/providers/post_likes_count_provider.dart';
 import 'package:monami/state/post/typedefs/post_id.dart';
 import 'package:monami/views/components/animation/models/small_error_animation.dart';
 import 'package:monami/views/components/constants/strings.dart';

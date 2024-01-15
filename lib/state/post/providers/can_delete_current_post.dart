@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/auth/providers/user_id_provider.dart';
+import 'package:monami/src/features/auth/providers/user_id_provider.dart';
 import 'package:monami/state/post/models/post.dart';
 
 final canCurrentUserDeletePostProvider =

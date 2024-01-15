@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monami/views/bottomnavigation/navigation_items.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:monami/views/onboarding/components/constants/app_color.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -43,7 +45,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               });
             },
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue.shade900,
+            selectedItemColor: AppColor.button,
             selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
             unselectedItemColor: Colors.black,
@@ -58,13 +60,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   }
 
   BottomNavigationBarItem getNavigationBarItem(
-      {String? label, IconData? iconPath, int? index}) {
+      {String? label, String? iconPath, int? index}) {
+    Color iconColor = index == currentIndex ? AppColor.button : Colors.black;
     return BottomNavigationBarItem(
       label: label,
-      icon: Icon(
+      icon: SvgPicture.asset(
         iconPath!,
-        size: index == 2 ? 20 : 12,
-        color: Colors.blue.shade900,
+        color: iconColor,
       ),
     );
   }
