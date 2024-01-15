@@ -5,11 +5,11 @@ class BottomClip extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
     paint.color = Colors.white;
-    var path = Path();
-    path.moveTo(0.0, 0.0);
-    path.lineTo(0.0, 200);
-    path.cubicTo(size.width - 300, 450, size.width - 50, 200, size.width, 450);
-    path.lineTo(size.width, 0.0);
+    var path = Path()
+      ..moveTo(0.0, 0.0)
+      ..lineTo(0.0, 200)
+      ..cubicTo(size.width - 300, 450, size.width - 50, 200, size.width, 450)
+      ..lineTo(size.width, 0.0);
     path.close();
     canvas.drawPath(path, paint);
   }

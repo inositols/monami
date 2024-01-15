@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/enums/dart_sorting.dart';
-import 'package:monami/state/comments/models/posts_comment_request.dart';
+import 'package:monami/src/features/comments/models/posts_comment_request.dart';
 import 'package:monami/state/post/models/post.dart';
 import 'package:monami/state/post/providers/can_delete_current_post.dart';
 import 'package:monami/state/post/providers/delete_post_provider.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/auth/providers/user_id_provider.dart';
+import 'package:monami/src/features/auth/providers/user_id_provider.dart';
 import 'package:monami/state/post/typedefs/user_id.dart';
 import 'package:monami/state/user_info/provider/user_info_provider.dart';
 

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/comments/extensions/comment_sorting.dart';
-import 'package:monami/state/comments/models/comments.dart';
-import 'package:monami/state/comments/models/posts_comment_request.dart';
-import 'package:monami/state/comments/models/posts_comments.dart';
+import 'package:monami/src/features/comments/extensions/comment_sorting.dart';
+import 'package:monami/src/features/comments/models/comments.dart';
+import 'package:monami/src/features/comments/models/posts_comment_request.dart';
+import 'package:monami/src/features/comments/models/posts_comments.dart';
 import 'package:monami/state/constants/firebase_collection.dart';
 import 'package:monami/state/constants/firebase_field_name.dart';
 import 'package:monami/state/post/models/post.dart';

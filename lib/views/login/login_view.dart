@@ -6,7 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/custom_widgets/button_loader.dart';
 import 'package:monami/custom_widgets/custom_button.dart';
 import 'package:monami/custom_widgets/custom_textfield.dart';
-import 'package:monami/state/auth/providers/auth_state_provider.dart';
+import 'package:monami/src/features/auth/providers/auth_state_provider.dart';
+import 'package:monami/views/onboarding/components/constants/app_color.dart';
 
 import 'component/custom_paint.dart';
 
@@ -21,7 +22,7 @@ class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
@@ -47,6 +48,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColor.button,
         resizeToAvoidBottomInset: false,
         body: Consumer(builder: (context, ref, _) {
           Future<void> onPressedFunction() async {

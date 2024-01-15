@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:monami/src/features/cart/view/cart_view.dart';
+
 import 'package:monami/views/home_view.dart';
-import 'package:monami/views/message/convo_view.dart';
 import 'package:monami/views/profile/profile_view.dart';
-import 'package:monami/views/settings/setting_view.dart';
 
 class NavigatorItem {
   final String label;
-  final IconData iconPath;
+  final String iconPath;
   final int index;
   final Widget screen;
 
@@ -15,16 +14,10 @@ class NavigatorItem {
 }
 
 List<NavigatorItem> navigatorItems = [
-  // ignore: deprecated_member_use
-  NavigatorItem("Home", FontAwesomeIcons.homeAlt, 0, const HomeView()),
-  // ignore: deprecated_member_use
-  NavigatorItem("Search", FontAwesomeIcons.search, 1, Container()),
-  NavigatorItem("Message", FontAwesomeIcons.message, 2, const ConvoView()),
-  NavigatorItem("Profile", FontAwesomeIcons.person, 3, const ProfileView()),
+  NavigatorItem("Shop", "assets/icons/shop_icon.svg", 0, const HomeView()),
+  NavigatorItem("Explore", "assets/icons/explore_icon.svg", 1, Container()),
+  NavigatorItem("Cart", "assets/icons/cart_icon.svg", 2, const CartView()),
+  NavigatorItem("Favourite", "assets/icons/favourite_icon.svg", 3, Container()),
   NavigatorItem(
-      "Settings",
-      // ignore: deprecated_member_use
-      FontAwesomeIcons.gripHorizontal,
-      4,
-      const SettingsView()),
+      "Account", "assets/icons/account_icon.svg", 4, const ProfileView()),
 ];

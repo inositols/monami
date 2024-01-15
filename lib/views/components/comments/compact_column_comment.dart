@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:monami/state/comments/models/comments.dart';
+import 'package:monami/src/features/comments/models/comments.dart';
 import 'package:monami/views/components/comments/compact_comment_tile.dart';
 
 class CompactCommentsColumn extends StatelessWidget {

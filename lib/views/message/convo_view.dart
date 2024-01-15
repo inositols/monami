@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'dart:math' as math;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/views/message/model/convo.dart';
@@ -18,7 +15,8 @@ class ConvoView extends StatelessWidget {
         minimum: const EdgeInsets.fromLTRB(8, 0, 8, 10),
         child: Column(
           children: [
-            Container(
+            
+            SizedBox(
               height: 100,
               child: Row(
                 children: [

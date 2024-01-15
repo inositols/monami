@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monami/state/image_upload/models/file_type.dart';
+import 'package:monami/src/features/image_upload/models/file_type.dart';
 import 'package:monami/state/post/models/post.dart';
 import 'package:monami/views/components/post/post_image_view.dart';
 import 'package:monami/views/components/post/post_video_view.dart';

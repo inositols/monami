@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/state/image_upload/models/thumbnail_request.dart';
-import 'package:monami/state/image_upload/providers/thumbnail_provider.dart';
+import 'package:monami/src/features/image_upload/models/thumbnail_request.dart';
+import 'package:monami/src/features/image_upload/providers/thumbnail_provider.dart';
 import 'package:monami/views/components/animation/models/loadin_animation.dart';
 import 'package:monami/views/components/animation/models/small_error_animation.dart';
 
