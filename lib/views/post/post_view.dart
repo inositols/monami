@@ -3,10 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/views/components/post/model/post_model.dart';
 import 'package:monami/views/onboarding/components/constants/app_color.dart';
 
-import '../../state/post/models/post.dart';
-import '../components/post/post_thumbnail.dart';
-import 'post_description.dart';
-
 class PostGridView extends StatelessWidget {
   // final Iterable<Post> posts;
   const PostGridView({
@@ -38,9 +34,10 @@ class PostGridView extends StatelessWidget {
                     Container(
                       width: double.maxFinite,
                       height: 200,
-                      decoration: const BoxDecoration(
-                          color: AppColor.button,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                      decoration: BoxDecoration(
+                          color: AppColor.grey400,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(15))),
                       child: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15)),

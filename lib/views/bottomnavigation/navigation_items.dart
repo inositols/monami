@@ -15,7 +15,7 @@ class NavigatorItem {
 
 List<NavigatorItem> navigatorItems = [
   NavigatorItem("Shop", "assets/icons/shop_icon.svg", 0, const HomeView()),
-  NavigatorItem("Explore", "assets/icons/explore_icon.svg", 1, Container()),
+ 
   NavigatorItem("Cart", "assets/icons/cart_icon.svg", 2, const CartView()),
   NavigatorItem("Favourite", "assets/icons/favourite_icon.svg", 3, Container()),
   NavigatorItem(
