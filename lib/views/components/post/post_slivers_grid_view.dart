@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/state/post/models/post.dart';
 import 'package:monami/views/onboarding/components/constants/app_color.dart';
-import 'package:monami/views/post/post_description.dart';
-
 import 'model/post_model.dart';
-import 'post_thumbnail.dart';
 
 class PostsSliverGridView extends StatelessWidget {
   final Iterable<Post> posts;
