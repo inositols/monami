@@ -12,6 +12,7 @@ import 'post_key.dart';
 class PostPayLoad extends MapView<String, dynamic> {
   PostPayLoad({
     required UserId userId,
+    required String postStatus,
     required String message,
     required String thumbnailUrl,
     required String fileUrl,
@@ -20,6 +21,7 @@ class PostPayLoad extends MapView<String, dynamic> {
     required double aspectRatio,
     required String thumbnailStorageId,
     required String originalFileStorageId,
+    required String category,
     required Map<PostSetting, bool> postSettings,
   }) : super(
           {
@@ -33,6 +35,8 @@ class PostPayLoad extends MapView<String, dynamic> {
             PostKey.aspectRatio: aspectRatio,
             PostKey.thumbnailStorageId: thumbnailStorageId,
             PostKey.originalFileStorageId: originalFileStorageId,
+            PostKey.postStatus: postStatus,
+            PostKey.category: category,
             PostKey.postSettings: {
               for (final postSetting in postSettings.entries)
                 postSetting.key.storageKey: postSetting.value,

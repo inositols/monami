@@ -58,7 +58,7 @@ class CustomButton extends StatelessWidget {
                   alignment: textAlign,
                   child: Text(text!,
                       style: GoogleFonts.inter(
-                          color: textColor ?? Colors.black,
+                          color: textColor,
                           fontSize: textSize ?? 16,
                           fontWeight: FontWeight.w600)),
                 ),

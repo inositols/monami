@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/src/utils/router/locator.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1709861906840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1709861906840,
+            "name": "Commit-0",
+            "content": "import 'package:get_it/get_it.dart';\r\nimport 'package:monami/src/handlers/navigation_handler.dart';\r\nimport 'package:monami/src/handlers/snack_bar_handler.dart';\r\nimport 'package:shared_preferences/shared_preferences.dart';\r\n\r\nGetIt locator = GetIt.instance;\r\n\r\nFuture<void> setupLocator() async {\r\n  final sharedPreferences = await SharedPreferences.getInstance();\r\n  locator.registerSingleton(sharedPreferences);\r\n\r\n  locator\r\n      .registerLazySingleton<NavigationService>(() => NavigationServiceImpl());\r\n  locator.registerLazySingleton<SnackbarHandler>(() => SnackbarHandlerImpl());\r\n}\r\n"
+        }
+    ]
+}

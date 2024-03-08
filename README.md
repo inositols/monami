@@ -18,9 +18,9 @@ Monami is an e-commerce mobile built with flutter. The app was used to explore n
 - [x] The Onboarding screens
 - [x] Authentication screen
 - [x] HomeScreen
-- Cart screen
-- Favourite screen
-- Account screen
+- [x] Cart screen
+- [x] Favourite screen
+- [x] Account screen
 - Order Screen
 - Payment screen
 - Track your order

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/state/post/models/post_payload.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1709863587241,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709863981931,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n     required String fileName,\r\n     required double aspectRatio,\r\n     required String thumbnailStorageId,\r\n     required String originalFileStorageId,\r\n+    required String category,\r\n     required Map<PostSetting, bool> postSettings,\r\n   }) : super(\r\n           {\r\n             PostKey.userId: userId,\r\n@@ -34,8 +35,9 @@\n             PostKey.aspectRatio: aspectRatio,\r\n             PostKey.thumbnailStorageId: thumbnailStorageId,\r\n             PostKey.originalFileStorageId: originalFileStorageId,\r\n             PostKey.postStatus: postStatus,\r\n+            PostKey.category: category,\r\n             PostKey.postSettings: {\r\n               for (final postSetting in postSettings.entries)\r\n                 postSetting.key.storageKey: postSetting.value,\r\n             },\r\n"
+                }
+            ],
+            "date": 1709863587241,
+            "name": "Commit-0",
+            "content": "import 'dart:collection' show MapView;\r\n\r\nimport 'package:cloud_firestore/cloud_firestore.dart';\r\nimport 'package:flutter/foundation.dart' show immutable;\r\nimport 'package:monami/src/features/image_upload/models/file_type.dart';\r\nimport 'package:monami/state/post_settings/models/post_settings.dart';\r\nimport 'package:monami/state/user_info/typedefs/user_id.dart';\r\n\r\nimport 'post_key.dart';\r\n\r\n@immutable\r\nclass PostPayLoad extends MapView<String, dynamic> {\r\n  PostPayLoad({\r\n    required UserId userId,\r\n    required String postStatus,\r\n    required String message,\r\n    required String thumbnailUrl,\r\n    required String fileUrl,\r\n    required FileType fileType,\r\n    required String fileName,\r\n    required double aspectRatio,\r\n    required String thumbnailStorageId,\r\n    required String originalFileStorageId,\r\n    required Map<PostSetting, bool> postSettings,\r\n  }) : super(\r\n          {\r\n            PostKey.userId: userId,\r\n            PostKey.message: message,\r\n            PostKey.createdAt: FieldValue.serverTimestamp(),\r\n            PostKey.thumbnailUrl: thumbnailUrl,\r\n            PostKey.fileUrl: fileUrl,\r\n            PostKey.fileType: fileType.name,\r\n            PostKey.fileName: fileName,\r\n            PostKey.aspectRatio: aspectRatio,\r\n            PostKey.thumbnailStorageId: thumbnailStorageId,\r\n            PostKey.originalFileStorageId: originalFileStorageId,\r\n            PostKey.postStatus:postStatus,\r\n            PostKey.postSettings: {\r\n              for (final postSetting in postSettings.entries)\r\n                postSetting.key.storageKey: postSetting.value,\r\n            },\r\n          },\r\n        );\r\n}\r\n"
+        }
+    ]
+}

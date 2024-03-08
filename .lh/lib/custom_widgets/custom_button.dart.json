@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/custom_widgets/custom_button.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1709858160759,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1709858160759,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\nimport 'package:google_fonts/google_fonts.dart';\r\n\r\nclass CustomButton extends StatelessWidget {\r\n  final VoidCallback? onPressed;\r\n  final String? text;\r\n  final Widget? child;\r\n  final Color? color;\r\n  final double? width;\r\n  final double? height;\r\n  final double? textSize;\r\n  final Color? textColor;\r\n  final List<Color>? gradient;\r\n  final BorderSide? borderSide;\r\n  final AlignmentGeometry textAlign;\r\n  final double? radius;\r\n  final bool isLoading;\r\n\r\n  const CustomButton(\r\n      {Key? key,\r\n      this.onPressed,\r\n      this.textColor,\r\n      this.text,\r\n      this.color,\r\n      this.child,\r\n      this.width = double.infinity,\r\n      this.height,\r\n      this.gradient = const [Colors.transparent, Colors.transparent],\r\n      this.borderSide,\r\n      this.radius = 50,\r\n      this.isLoading = false,\r\n      this.textSize,\r\n      this.textAlign = Alignment.center})\r\n      : super(key: key);\r\n\r\n  @override\r\n  Widget build(BuildContext context) {\r\n    return IgnorePointer(\r\n      ignoring: isLoading ? true : false,\r\n      child: SizedBox(\r\n        height: height ?? 54,\r\n        width: width,\r\n        child: AnimatedContainer(\r\n          duration: const Duration(milliseconds: 650),\r\n          decoration: BoxDecoration(\r\n              borderRadius: BorderRadius.circular(radius!),\r\n              gradient: LinearGradient(colors: gradient!)),\r\n          child: MaterialButton(\r\n            elevation: 0,\r\n            highlightElevation: 0,\r\n            onPressed: onPressed ?? () {},\r\n            color: isLoading ? Colors.blueGrey.shade300 : color,\r\n            shape: OutlineInputBorder(\r\n                borderRadius: BorderRadius.circular(radius!),\r\n                borderSide: borderSide ?? BorderSide.none),\r\n            child: child ??\r\n                Align(\r\n                  alignment: textAlign,\r\n                  child: Text(text!,\r\n                      style: GoogleFonts.inter(\r\n                          color: textColor,\r\n                          fontSize: textSize ?? 16,\r\n                          fontWeight: FontWeight.w600)),\r\n                ),\r\n          ),\r\n        ),\r\n      ),\r\n    );\r\n  }\r\n}\r\n"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/main.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1709850378625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709866863051,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n   );\r\n   await setupLocator();\r\n   runApp(\r\n     DevicePreview(\r\n-      enabled: true,\r\n+      enabled: false,\r\n       builder: (context) => const ProviderScope(child: MyApp()),\r\n     ),\r\n   );\r\n }\r\n"
+                }
+            ],
+            "date": 1709850378625,
+            "name": "Commit-0",
+            "content": "import 'package:firebase_core/firebase_core.dart';\r\nimport 'package:flutter/material.dart';\r\nimport 'package:hooks_riverpod/hooks_riverpod.dart';\r\nimport 'package:monami/firebase_options.dart';\r\nimport 'package:monami/src/features/auth/providers/auth_state_provider.dart';\r\nimport 'package:monami/src/handlers/navigation_handler.dart';\r\nimport 'package:monami/src/handlers/snack_bar_handler.dart';\r\nimport 'package:monami/src/utils/router/locator.dart';\r\nimport 'package:monami/src/utils/router/router.dart';\r\nimport 'package:monami/views/bottomnavigation/bottom_navigation_screen.dart';\r\nimport 'package:device_preview/device_preview.dart';\r\nimport 'package:monami/views/onboarding/onboarding_view.dart';\r\n\r\nvoid main() async {\r\n  WidgetsFlutterBinding.ensureInitialized();\r\n  await Firebase.initializeApp(\r\n    options: DefaultFirebaseOptions.currentPlatform,\r\n  );\r\n  await setupLocator();\r\n  runApp(\r\n    DevicePreview(\r\n      enabled: true,\r\n      builder: (context) => const ProviderScope(child: MyApp()),\r\n    ),\r\n  );\r\n}\r\n\r\nclass MyApp extends ConsumerWidget {\r\n  const MyApp({super.key});\r\n  @override\r\n  Widget build(BuildContext context, WidgetRef ref) {\r\n    final authState = ref.watch(authenticationChangesProvider);\r\n    return MaterialApp(\r\n      title: 'Monami',\r\n      debugShowCheckedModeBanner: false,\r\n      darkTheme: ThemeData.dark(),\r\n      themeMode: ThemeMode.dark,\r\n      scaffoldMessengerKey: locator<SnackbarHandler>().key,\r\n      onGenerateRoute: generateRoute,\r\n      navigatorKey: locator<NavigationService>().navigatorKey,\r\n      home: authState.when(\r\n        data: (user) =>\r\n            user != null ? const BottomNavigation() : const OnboardingScreen(),\r\n        error: (error, stackTrace) => Text(error.toString()),\r\n        loading: () => const Center(\r\n          child: CircularProgressIndicator(),\r\n        ),\r\n      ),\r\n    );\r\n  }\r\n}\r\n"
+        }
+    ]
+}

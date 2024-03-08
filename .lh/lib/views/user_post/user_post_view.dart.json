@@ -1,0 +1,30 @@
+{
+    "sourceFile": "lib/views/user_post/user_post_view.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1709868966484,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709869010980,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,12 +15,10 @@\n     final posts = ref.watch(userPostProvider);\r\n     return RefreshIndicator(\r\n         child: posts.when(data: (posts) {\r\n           if (posts.isEmpty) {\r\n-            return Center(\r\n-              child: const EmptyContentAnimationWihText(\r\n-                  text: Strings.youHaveNoPosts),\r\n-            );\r\n+            return const EmptyContentAnimationWihText(\r\n+                text: Strings.youHaveNoPosts);\r\n           } else {\r\n             return const PostGridView();\r\n           }\r\n         }, error: (error, stackTrace) {\r\n"
+                },
+                {
+                    "date": 1709869241093,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n           if (posts.isEmpty) {\r\n             return const EmptyContentAnimationWihText(\r\n                 text: Strings.youHaveNoPosts);\r\n           } else {\r\n-            return const PostGridView();\r\n+            return const PostGridView(posts:posts);\r\n           }\r\n         }, error: (error, stackTrace) {\r\n           return const ErrorAnimationView();\r\n         }, loading: () {\r\n"
+                },
+                {
+                    "date": 1709869257962,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n           if (posts.isEmpty) {\r\n             return const EmptyContentAnimationWihText(\r\n                 text: Strings.youHaveNoPosts);\r\n           } else {\r\n-            return const PostGridView(posts:posts);\r\n+            return PostGridView(posts:posts);\r\n           }\r\n         }, error: (error, stackTrace) {\r\n           return const ErrorAnimationView();\r\n         }, loading: () {\r\n"
+                }
+            ],
+            "date": 1709868966371,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\nimport 'package:hooks_riverpod/hooks_riverpod.dart';\r\nimport 'package:monami/state/post/providers/user_post_provider.dart';\r\nimport 'package:monami/views/components/animation/models/empty_animation_and_text.dart';\r\nimport 'package:monami/views/components/animation/models/error_animation.dart';\r\nimport 'package:monami/views/components/animation/models/loadin_animation.dart';\r\nimport 'package:monami/views/constants/strings.dart';\r\nimport 'package:monami/views/post/post_view.dart';\r\n\r\nclass UserPostView extends ConsumerWidget {\r\n  const UserPostView({super.key});\r\n\r\n  @override\r\n  Widget build(BuildContext context, WidgetRef ref) {\r\n    final posts = ref.watch(userPostProvider);\r\n    return RefreshIndicator(\r\n        child: posts.when(data: (posts) {\r\n          if (posts.isEmpty) {\r\n            return Center(\r\n              child: const EmptyContentAnimationWihText(\r\n                  text: Strings.youHaveNoPosts),\r\n            );\r\n          } else {\r\n            return const PostGridView();\r\n          }\r\n        }, error: (error, stackTrace) {\r\n          return const ErrorAnimationView();\r\n        }, loading: () {\r\n          return const LoadingAnimationView();\r\n        }),\r\n        onRefresh: () {\r\n          ref.invalidate(userPostProvider);\r\n          return Future.delayed(const Duration(seconds: 1));\r\n        });\r\n  }\r\n}\r\n"
+        }
+    ]
+}

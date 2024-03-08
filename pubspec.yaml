@@ -48,6 +48,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/grocery_images/
     - assets/icons/
     - assets/animations/loading.json
     - assets/animations/error.json

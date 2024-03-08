@@ -1,0 +1,34 @@
+{
+    "sourceFile": "lib/src/features/cart/view/cart_view.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1709852160296,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709852181517,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n         //   title: 'Carts',\r\n         //   actions: [],\r\n         // ),\r\n         appBar: AppBar(\r\n-          title: Text(\"Your Carts\"),\r\n+          title: const Text(\"Your Carts\"),\r\n           centerTitle: true,\r\n         ),\r\n         builder: (size) {\r\n           return SafeArea(\r\n"
+                },
+                {
+                    "date": 1709852323681,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n         builder: (size) {\r\n           return SafeArea(\r\n             minimum: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),\r\n             child: Column(\r\n-                children: listOfCart.map((item) {\r\n+                children: [...listOfCart.map((item) {\r\n               return Card(\r\n                 child: Column(\r\n                   children: [\r\n                     ListTile(\r\n@@ -56,9 +56,11 @@\n                     )\r\n                   ],\r\n                 ),\r\n               );\r\n-            }).toList()),\r\n+            }).toList(),\r\n+            Expanded(child: ElevatedButton(onPressed:(){},child: Text(\"Proceed to CheckOut\")))\r\n+            ]),\r\n           );\r\n         });\r\n   }\r\n }\r\n"
+                },
+                {
+                    "date": 1709852334813,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -59,9 +59,9 @@\n                 );\r\n               }).toList(),\r\n               Expanded(\r\n                   child: ElevatedButton(\r\n-                      onPressed: () {}, child: Text(\"Proceed to CheckOut\")))\r\n+                      onPressed: () {}, child: const Text(\"Proceed to CheckOut\")))\r\n             ]),\r\n           );\r\n         });\r\n   }\r\n"
+                },
+                {
+                    "date": 1709852530854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -58,11 +58,14 @@\n                   ),\r\n                 );\r\n               }).toList(),\r\n               Expanded(\r\n-                  child: ElevatedButton(\r\n-                      onPressed: () {},\r\n-                      child: const Text(\"Proceed to CheckOut\")))\r\n+                  child: SizedBox(\r\n+                    height: 40,\r\n+                    child: ElevatedButton(\r\n+                        onPressed: () {},\r\n+                        child: const Text(\"Proceed to CheckOut\")),\r\n+                  ))\r\n             ]),\r\n           );\r\n         });\r\n   }\r\n"
+                }
+            ],
+            "date": 1709852160296,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\n\r\nimport 'package:monami/src/shared/base_scaffold.dart';\r\n\r\nimport '../../../../custom_widgets/app_bar.dart';\r\n\r\nclass CartView extends StatefulWidget {\r\n  const CartView({super.key});\r\n\r\n  @override\r\n  State<CartView> createState() => _CartViewState();\r\n}\r\n\r\nclass _CartViewState extends State<CartView> {\r\n  @override\r\n  Widget build(BuildContext context) {\r\n    return SharedScaffold(\r\n        backgroundColor: Colors.white,\r\n        // appBar: const CustomAppBar(\r\n        //   leading: true,\r\n        //   title: 'Carts',\r\n        //   actions: [],\r\n        // ),\r\n        appBar: AppBar(\r\n          title: Text(\"Your Carts\"),\r\n          centerTitle: true,\r\n        ),\r\n        builder: (size) {\r\n          return SafeArea(\r\n            minimum: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),\r\n            child: Column(\r\n                children: listOfCart.map((item) {\r\n              return Card(\r\n                child: Column(\r\n                  children: [\r\n                    ListTile(\r\n                      leading: Text(item.id.toString()),\r\n                      title: Text(item.itemName),\r\n                      subtitle: Text(item.itemPrice.toString()),\r\n                      trailing: SizedBox(\r\n                        width: 150,\r\n                        child: Row(\r\n                          children: [\r\n                            IconButton(\r\n                              onPressed: () {},\r\n                              icon: const Icon(Icons.remove),\r\n                            ),\r\n                            const Text(\"0\"),\r\n                            IconButton(\r\n                              onPressed: () {},\r\n                              icon: const Icon(Icons.add),\r\n                            ),\r\n                          ],\r\n                        ),\r\n                      ),\r\n                    )\r\n                  ],\r\n                ),\r\n              );\r\n            }).toList()),\r\n          );\r\n        });\r\n  }\r\n}\r\n\r\nclass CartModel {\r\n  final int id;\r\n  final String itemName;\r\n  final int itemPrice;\r\n  const CartModel({\r\n    required this.id,\r\n    required this.itemName,\r\n    required this.itemPrice,\r\n  });\r\n}\r\n\r\nconst List<CartModel> listOfCart = [\r\n  CartModel(id: 1, itemName: \"Shoe\", itemPrice: 100),\r\n  CartModel(id: 2, itemName: \"Bag\", itemPrice: 10),\r\n  CartModel(id: 3, itemName: \"Gown\", itemPrice: 50),\r\n];\r\n"
+        }
+    ]
+}
