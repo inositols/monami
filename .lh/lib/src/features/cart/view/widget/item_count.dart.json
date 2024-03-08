@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/src/features/cart/view/widget/item_count.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1709871272347,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1709871272347,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\nimport 'package:monami/views/onboarding/components/constants/app_color.dart';\r\n\r\n\r\nclass ItemCounterWidget extends StatefulWidget {\r\n  final Function onAmountChanged;\r\n\r\n  const ItemCounterWidget({Key? key, required this.onAmountChanged})\r\n      : super(key: key);\r\n\r\n  @override\r\n  State<ItemCounterWidget> createState() => _ItemCounterWidgetState();\r\n}\r\n\r\nclass _ItemCounterWidgetState extends State<ItemCounterWidget> {\r\n  int amount = 1;\r\n\r\n  @override\r\n  Widget build(BuildContext context) {\r\n    return Row(\r\n      children: [\r\n        iconWidget(Icons.remove,\r\n            iconColor: AppColor.grey400, onPressed: decrementAmount),\r\n        const SizedBox(width: 18),\r\n        SizedBox(\r\n            width: 30,\r\n            child: Center(\r\n                child: getText(\r\n                    text: amount.toString(), fontSize: 18, isBold: true))),\r\n        const SizedBox(width: 18),\r\n        iconWidget(Icons.add,\r\n            iconColor: Colors.purple.shade900, onPressed: incrementAmount)\r\n      ],\r\n    );\r\n  }\r\n\r\n  void incrementAmount() {\r\n    setState(() {\r\n      amount = amount + 1;\r\n      updateParent();\r\n    });\r\n  }\r\n\r\n  void decrementAmount() {\r\n    if (amount <= 0) return;\r\n    setState(() {\r\n      amount = amount - 1;\r\n      updateParent();\r\n    });\r\n  }\r\n\r\n  void updateParent() {\r\n    if (widget.onAmountChanged != null) {\r\n      widget.onAmountChanged(amount);\r\n    }\r\n  }\r\n\r\n  Widget iconWidget(IconData iconData, {required Color iconColor, onPressed}) {\r\n    return GestureDetector(\r\n      onTap: () {\r\n        if (onPressed != null) {\r\n          onPressed();\r\n        }\r\n      },\r\n      child: Container(\r\n        height: 45,\r\n        width: 45,\r\n        decoration: BoxDecoration(\r\n          borderRadius: BorderRadius.circular(17),\r\n          border: Border.all(\r\n            color:const  Color(0xffE2E2E2),\r\n          ),\r\n        ),\r\n        child: Center(\r\n          child: Icon(\r\n            iconData,\r\n            color: iconColor,\r\n            size: 25,\r\n          ),\r\n        ),\r\n      ),\r\n    );\r\n  }\r\n\r\n  Widget getText(\r\n      {required String text,\r\n      required double fontSize,\r\n      bool isBold = false,\r\n      color = Colors.black}) {\r\n    return Text(\r\n      text,\r\n      style: TextStyle(\r\n        fontSize: fontSize,\r\n        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,\r\n        color: color,\r\n      ),\r\n    );\r\n  }\r\n}"
+        }
+    ]
+}

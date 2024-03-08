@@ -1,0 +1,18 @@
+{
+    "sourceFile": "README.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1709875405886,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1709875405886,
+            "name": "Commit-0",
+            "content": "# Monami\r\n\r\nMonami is an e-commerce mobile built with flutter. The app was used to explore not all but yet the neccessary concepts a flutter dev were meant to undertand in builidng a large, robust and scalable mobile apps.\r\n\r\n## Concepts\r\n\r\n- Firebase Authentication\r\n- State Management Options(Riverpod)\r\n- DRY principle\r\n- Tree shaking\r\n- Payment Gateway Integration(Paystack)\r\n- Google Map Integration\r\n- Rewriting Good Documentaion for your project\r\n\r\n## Features\r\n\r\n- [x] The Splash Screen\r\n- [x] The Onboarding screens\r\n- [x] Authentication screen\r\n- [x] HomeScreen\r\n- [x] Cart screen\r\n- [x] Favourite screen\r\n- [x] Account screen\r\n- Order Screen\r\n- Payment screen\r\n- Track your order\r\n\r\n### Application structure\r\n\r\nAfter successful build, your application structure should look like this:\r\n\r\n```\r\n.\r\n├── android                         - It contains files required to run the application on an Android platform.\r\n├── assets                          - It contains all images and fonts of your application.\r\n├── ios                             - It contains files required to run the application on an iOS platform.\r\n├── lib                             - Most important folder in the application, used to write most of the Dart code..\r\n    ├── main.dart                   - Starting point of the application\r\n    ├── core\r\n    │   ├── app_export.dart         - It contains commonly used file imports\r\n    │   ├── constants               - It contains static constant class file\r\n    │   └── utils                   - It contains common files and utilities of the application\r\n    ├── presentation                - It contains widgets of the screens\r\n    ├── routes                      - It contains all the routes of the application\r\n    └── theme                       - It contains app theme and decoration classes\r\n    └── widgets                     - It contains all custom widget classes\r\n```\r\n\r\n### How to format your code?\r\n\r\n- if your code is not formatted then run following command in your terminal to format code\r\n  ```\r\n  dart format .\r\n  ```\r\n\r\n### How you can improve code readability?\r\n\r\nResolve the errors and warnings that are shown in the application.\r\n\r\n### Libraries and tools used\r\n\r\n- Riverpod - State management\r\n  https://riverpod.dev/docs/getting_started\r\n- cached_network_image - For storing internet image into cache\r\n  https://pub.dev/packages/cached_network_image\r\n"
+        }
+    ]
+}

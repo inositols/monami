@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/views/components/post/post_image_view.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1709872729639,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1709872729639,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\nimport 'package:monami/state/post/models/post.dart';\r\n\r\nclass PostImageView extends StatelessWidget {\r\n  final Post post;\r\n  const PostImageView({\r\n    super.key,\r\n    required this.post,\r\n  });\r\n\r\n  @override\r\n  Widget build(BuildContext context) {\r\n    return AspectRatio(\r\n      aspectRatio: post.aspectRatio,\r\n      child: ClipRRect(\r\n        borderRadius: BorderRadius.circular(12),\r\n        child: Image.network(\r\n          post.fileUrl,\r\n          fit: BoxFit.cover,\r\n          loadingBuilder: (context, child, loadingProgress) {\r\n            if (loadingProgress == null) return child;\r\n            return const Center(\r\n              child: CircularProgressIndicator(),\r\n            );\r\n          },\r\n        ),\r\n      ),\r\n    );\r\n  }\r\n}\r\n"
+        }
+    ]
+}

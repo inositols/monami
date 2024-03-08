@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/state/post/models/post_key.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1709863536221,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709863965518,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,8 +12,9 @@\n   static const aspectRatio = 'aspect_ratio';\r\n   static const postSettings = 'post_settings';\r\n   static const thumbnailStorageId = 'thumbnail_storage_id';\r\n   static const originalFileStorageId = 'original_file_storage_id';\r\n-  static const postStatus= \"Not Approved\";\r\n+  static const postStatus = \"status\";\r\n+  static const category = \"category\";\r\n \r\n   const PostKey._();\r\n }\r\n"
+                }
+            ],
+            "date": 1709863536221,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/foundation.dart' show immutable;\r\n\r\n@immutable\r\nclass PostKey {\r\n  static const userId = 'uid';\r\n  static const message = 'message';\r\n  static const createdAt = 'created_at';\r\n  static const thumbnailUrl = 'thumbnail_url';\r\n  static const fileUrl = 'file_url';\r\n  static const fileType = 'file_type';\r\n  static const fileName = 'file_name';\r\n  static const aspectRatio = 'aspect_ratio';\r\n  static const postSettings = 'post_settings';\r\n  static const thumbnailStorageId = 'thumbnail_storage_id';\r\n  static const originalFileStorageId = 'original_file_storage_id';\r\n  static const postStatus= \"Not Approved\";\r\n\r\n  const PostKey._();\r\n}\r\n"
+        }
+    ]
+}

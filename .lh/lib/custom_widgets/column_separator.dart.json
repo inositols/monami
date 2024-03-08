@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/custom_widgets/column_separator.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1709854099806,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709854108991,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,24 @@\n+import 'package:flutter/material.dart';\r\n+\r\n+List<Widget> getChildrenWithSeperator(\r\n+    {required List<Widget> widgets,\r\n+    required Widget seperator,\r\n+    bool addToLastChild = true}) {\r\n+  List<Widget> children = [];\r\n+  if (widgets.isNotEmpty) {\r\n+    children.add(seperator);\r\n+\r\n+    for (int i = 0; i < widgets.length; i++) {\r\n+      children.add(widgets[i]);\r\n+\r\n+      if (widgets.length - i == 1) {\r\n+        if (addToLastChild) {\r\n+          children.add(seperator);\r\n+        }\r\n+      } else {\r\n+        children.add(seperator);\r\n+      }\r\n+    }\r\n+  }\r\n+  return children;\r\n+}\r\n"
+                }
+            ],
+            "date": 1709854099806,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\r\n\r\nList<Widget> getChildrenWithSeperator(\r\n    {required List<Widget> widgets,\r\n    required Widget seperator,\r\n    bool addToLastChild = true}) {\r\n  List<Widget> children = [];\r\n  if (widgets.isNotEmpty) {\r\n    children.add(seperator);\r\n\r\n    for (int i = 0; i < widgets.length; i++) {\r\n      children.add(widgets[i]);\r\n\r\n      if (widgets.length - i == 1) {\r\n        if (addToLastChild) {\r\n          children.add(seperator);\r\n        }\r\n      } else {\r\n        children.add(seperator);\r\n      }\r\n    }\r\n  }\r\n  return children;\r\n}"
+        }
+    ]
+}

@@ -45,10 +45,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
               });
             },
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: AppColor.button,
+            selectedItemColor: AppColor.blackColor,
             selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
-            unselectedItemColor: Colors.black,
+            unselectedItemColor: AppColor.button,
             items: navigatorItems.map((e) {
               return getNavigationBarItem(
                   label: e.label, index: e.index, iconPath: e.iconPath);
@@ -61,7 +61,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   BottomNavigationBarItem getNavigationBarItem(
       {String? label, String? iconPath, int? index}) {
-    Color iconColor = index == currentIndex ? AppColor.button : Colors.black;
+    Color iconColor = index == currentIndex ? AppColor.blackColor : AppColor.button;
     return BottomNavigationBarItem(
       label: label,
       icon: SvgPicture.asset(

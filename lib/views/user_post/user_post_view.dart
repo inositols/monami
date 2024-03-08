@@ -19,7 +19,7 @@ class UserPostView extends ConsumerWidget {
             return const EmptyContentAnimationWihText(
                 text: Strings.youHaveNoPosts);
           } else {
-            return const PostGridView();
+            return PostGridView(posts:posts);
           }
         }, error: (error, stackTrace) {
           return const ErrorAnimationView();

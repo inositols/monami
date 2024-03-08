@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1699963063412,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1709855102281,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -47,8 +47,9 @@\n   uses-material-design: true\n \n   assets:\n     - assets/images/\n+    - assets/images/grocery_images/\n     - assets/icons/\n     - assets/animations/loading.json\n     - assets/animations/error.json\n     - assets/animations/small_error.json\n"
                 }
             ],
             "date": 1699963063412,

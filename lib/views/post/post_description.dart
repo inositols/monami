@@ -4,10 +4,8 @@ import 'package:monami/enums/dart_sorting.dart';
 import 'package:monami/src/features/comments/models/posts_comment_request.dart';
 import 'package:monami/state/post/models/post.dart';
 import 'package:monami/state/post/providers/can_delete_current_post.dart';
-import 'package:monami/state/post/providers/delete_post_provider.dart';
 import 'package:monami/state/post/providers/specific_with_comment.dart';
 import 'package:monami/views/components/animation/models/error_animation.dart';
-import 'package:monami/views/components/animation/models/small_error_animation.dart';
 import 'package:monami/views/components/comments/compact_column_comment.dart';
 import 'package:monami/views/components/likes/likes_button.dart';
 import 'package:monami/views/components/likes/likes_count_view.dart';
@@ -15,10 +13,7 @@ import 'package:monami/views/components/post/post_date_view.dart';
 import 'package:monami/views/components/post/post_display_image_and_message_view.dart';
 import 'package:monami/views/components/post/post_imageor_video.dart';
 import 'package:monami/views/constants/strings.dart';
-import 'package:monami/views/dialogs/alert_dialog_model.dart';
-import 'package:monami/views/dialogs/delete_dialog.dart';
 import 'package:monami/views/post/post_comments_view.dart';
-import 'package:share_plus/share_plus.dart';
 import '../components/animation/models/loadin_animation.dart';
 
 class PostDetailsView extends ConsumerStatefulWidget {
@@ -58,56 +53,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          Strings.postDetails,
-        ),
-        actions: [
-          // share button is always present
-          postWithComments.when(
-            data: (postWithComments) {
-              return IconButton(
-                icon: const Icon(Icons.share),
-                onPressed: () {
-                  final url = postWithComments.post.fileUrl;
-                  Share.share(
-                    url,
-                    subject: Strings.checkOutThisPost,
-                  );
-                },
-              );
-            },
-            error: (error, stackTrace) {
-              return const SmallErrorAnimationView();
-            },
-            loading: () {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
-          // delete button or no delete button if user cannot delete this post
-          if (canDeletePost.value ?? false)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () async {
-                final shouldDeletePost = await const DeletedDialog(
-                        titleOfObjectToDelete: Strings.post)
-                    .present(context)
-                    .then((shouldDelete) => shouldDelete ?? false);
-                if (shouldDeletePost) {
-                  await ref
-                      .read(deletePostProvider.notifier)
-                      .deletePost(post: widget.post);
-                  if (mounted) {
-                    Navigator.of(context).pop();
-                  }
-                }
-                // delete the post now
-              },
-            )
-        ],
-      ),
       body: postWithComments.when(
         data: (postWithComments) {
           final postId = postWithComments.post.postId;
@@ -115,6 +60,29 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Container(
+                  height: 70,
+                  margin: const EdgeInsets.only(top: 30, left: 10, right: 10),
+                  color: Colors.purple.shade900,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Icon(Icons.arrow_back_ios)),
+                      const Text(
+                        Strings.postDetails,
+                      ),
+                      if (postWithComments.post.allowsLikes)
+                        LikeButton(
+                          postId: postId,
+                        ),
+                    ],
+                  ),
+                ),
+
                 InkWell(
                   onTap: () {
                     print("object");

@@ -12,6 +12,7 @@ import 'package:monami/src/features/image_upload/extension/get_collectionname_fr
 import 'package:monami/src/features/image_upload/extension/get_image_data_aspect_ratio.dart';
 import 'package:monami/src/features/image_upload/models/file_type.dart';
 import 'package:monami/src/features/image_upload/typedef/is_loading.dart';
+import 'package:monami/state/post/models/post_key.dart';
 import 'package:monami/state/post/models/post_payload.dart';
 import 'package:monami/state/post_settings/models/post_settings.dart';
 import 'package:uuid/uuid.dart';
@@ -28,6 +29,7 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
     required String message,
     required Map<PostSetting, bool> postSettings,
     required String userId,
+    required String category,
   }) async {
     isLoading = true;
 
@@ -109,6 +111,8 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
         postSettings: postSettings,
         thumbnailStorageId: thumbnailStorageId,
         originalFileStorageId: originalFileStorageId,
+        postStatus: "Not Approved",
+        category: category,
       );
       await FirebaseFirestore.instance
           .collection(FirebaseCollectionName.posts)

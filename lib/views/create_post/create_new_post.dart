@@ -11,6 +11,7 @@ import 'package:monami/state/post_settings/models/post_settings.dart';
 import 'package:monami/state/post_settings/providers/post_settings_provider.dart';
 import 'package:monami/views/components/file_thumbnail.dart';
 import 'package:monami/views/constants/strings.dart';
+import 'package:monami/views/onboarding/components/constants/app_color.dart';
 
 class CreateNewPostView extends StatefulHookConsumerWidget {
   final File fileToPost;
@@ -28,6 +29,9 @@ class CreateNewPostView extends StatefulHookConsumerWidget {
 }
 
 class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
+  String selectedItem = "Shoes";
+  List<String> dropdownItems = ['Shoes', 'Dress', 'Caps', 'Clothes'];
+
   @override
   Widget build(BuildContext context) {
     final thumbnailRequest = ThumbnailRequest(
@@ -59,7 +63,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ? () async {
                     // get the user id first
                     final userId = ref.read(userIdProvider);
-                    print(userId!);
+                    // print(userId!);
                     if (userId == null) {
                       return;
                     }
@@ -71,6 +75,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                               message: message,
                               postSettings: postSettings,
                               userId: userId,
+                              category: selectedItem,
                             );
                     if (isUploaded && mounted) {
                       Navigator.of(context).pop();
@@ -99,6 +104,46 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 controller: postController,
               ),
             ),
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Category"),
+                      SizedBox(
+                        height: 70,
+                        child: DropdownButton<String>(
+                          alignment: Alignment.center,
+                          underline: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                width: 1,
+                                color: AppColor.bgColor,
+                              ),
+                            ),
+                          ),
+                          isExpanded: true,
+                          value: selectedItem,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedItem = newValue!;
+                            });
+                          },
+                          items: dropdownItems
+                              .map<DropdownMenuItem<String>>((value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(value),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    ])),
             ...PostSetting.values.map(
               (postSetting) => ListTile(
                 title: Text(postSetting.title),
