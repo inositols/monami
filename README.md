@@ -1,16 +1,15 @@
-# Monami
+# Monami: Your E-commerce Flutter App
 
-Monami is an e-commerce mobile built with flutter. The app was used to explore not all but yet the neccessary concepts a flutter dev were meant to undertand in builidng a large, robust and scalable mobile apps.
+Monami is a versatile e-commerce mobile/web application built with Flutter. This project serves as an exploration of essential concepts that every Flutter developer should understand when building large, robust, and scalable flutter applications.
 
-## Concepts
+## Key Concepts Explored
 
-- Firebase Authentication
-- State Management Options(Riverpod)
-- DRY principle
-- Tree shaking
-- Payment Gateway Integration(Paystack)
-- Google Map Integration
-- Rewriting Good Documentaion for your project
+- User Authentication: Secure user registration and authentication powered by Firebase Authentication.
+- State Management: Efficient state management using Riverpod, ensuring smooth user interactions and data synchronization
+- Responsive Design: A responsive UI design that adapts seamlessly to various screen sizes, providing an optimal viewing experience across devices.
+- Payment Integration: Seamless integration of Paystack payment gateway for secure and convenient transactions.
+- Location Services: Integration of Google Maps API for location-based features such as store locator and order tracking.
+- Optimized Performance: Implementation of tree shaking techniques to eliminate unused code and optimize app performance.
 
 ## Features
 
