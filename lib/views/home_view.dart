@@ -110,13 +110,13 @@ class _HomeViewState extends ConsumerState<HomeView>
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: Colors.purple.shade900),
+                          color: Colors.black),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: const EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(12),
                             width: MediaQuery.sizeOf(context).width / 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +124,10 @@ class _HomeViewState extends ConsumerState<HomeView>
                               children: [
                                 Text(
                                   "new \ncollection".toUpperCase(),
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(color: Colors.white),
                                 ),
                                 SizedBox(
                                   width: 100,
@@ -140,7 +143,7 @@ class _HomeViewState extends ConsumerState<HomeView>
                               ],
                             ),
                           ),
-                          Expanded(child: Image.asset(AppImage.nina1))
+                          Expanded(child: Image.asset(AppImage.cap1))
                         ],
                       ),
                     ),
@@ -169,67 +172,88 @@ class _HomeViewState extends ConsumerState<HomeView>
                       ),
                     ),
                     const Gap(20),
-                    SizedBox(
+                    Container(
                       height: 40,
+                      padding: EdgeInsets.only(left: 0, right: 10),
                       child: TabBar(
                         tabAlignment: TabAlignment.start,
-                        indicatorPadding: EdgeInsets.zero,
-                        labelPadding: const EdgeInsets.all(3),
+                        // indicatorPadding: EdgeInsets.all(3),
+                        // labelPadding: const EdgeInsets.only(left: 8, right: 5),
                         unselectedLabelColor: AppColor.blackColor,
                         dividerColor: Colors.transparent,
                         isScrollable: true,
                         indicatorSize: TabBarIndicatorSize.tab,
                         controller: _tabController,
                         indicator: BoxDecoration(
-                            color: Colors.purple.shade900,
-                            borderRadius: BorderRadius.circular(2)),
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(12)),
                         labelColor: AppColor.whiteColor,
                         tabs: [
                           Tab(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
+                            child: Container(
+                              height: 40,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Overall')),
                             ),
-                            child: const Center(child: Text("All")),
-                          )),
+                          ),
                           Tab(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
+                            child: Container(
+                              height: 45,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Overall')),
                             ),
-                            child: const Center(child: Text("Shoes")),
-                          )),
+                          ),
                           Tab(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
+                            child: Container(
+                              height: 45,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Overall')),
                             ),
-                            child: const Center(child: Text("Caps")),
-                          )),
+                          ),
                           Tab(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
+                            child: Container(
+                              height: 45,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Overall')),
                             ),
-                            child: const Center(child: Text("Shirts")),
-                          )),
+                          ),
                           Tab(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
+                            child: Container(
+                              height: 45,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Overall')),
                             ),
-                            child: const Center(child: Text("Clothes")),
-                          )),
+                          ),
                         ],
                       ),
                     )

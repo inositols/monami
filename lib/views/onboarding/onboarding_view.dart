@@ -110,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 height: 60,
                                 width: 60,
                                 decoration: BoxDecoration(
-                                    color: Colors.brown.shade200,
+                                    color: AppColor.bgColor,
                                     borderRadius: BorderRadius.circular(50)),
                               ),
                               Positioned(

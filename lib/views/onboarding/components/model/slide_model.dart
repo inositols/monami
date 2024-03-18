@@ -19,12 +19,12 @@ final slideList = [
     description: '',
   ),
   Slide(
-    imageUrl: AppImage.jessica,
+    imageUrl: AppImage.cap3,
     title: 'Discover Trend',
     description: '',
   ),
   Slide(
-    imageUrl: AppImage.jessica1,
+    imageUrl: AppImage.headphone3,
     title: 'Discover Fashions',
     description: '',
   ),

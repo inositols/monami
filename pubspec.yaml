@@ -21,6 +21,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
+  flutter_riverpod: ^2.5.1
+  flutter_secure_storage: ^9.0.0
   flutter_svg: ^2.0.9
   font_awesome_flutter: null
   gap: ^3.0.1
@@ -33,6 +35,7 @@ dependencies:
   intl: null
   lottie: ^2.2.0
   share_plus: ^7.0.2
+  shared_preferences: ^2.2.2
   url_launcher: ^6.1.10
   uuid: ^3.0.7
   video_player: ^2.6.0
@@ -40,6 +43,18 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo.jpg"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/logo.jpg"
+    background_color: "0xff000000"
+    theme_color: "0xfffffff"
   flutter_test:
     sdk: flutter
 
