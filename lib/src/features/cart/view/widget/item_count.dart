@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monami/views/onboarding/components/constants/app_color.dart';
+import 'package:monami/src/utils/constants/app_colors.dart';
 
 class ItemCounterWidget extends StatefulWidget {
   final Function onAmountChanged;

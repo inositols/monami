@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monami/custom_widgets/custom_button.dart';
-import 'package:monami/views/onboarding/components/constants/app_color.dart';
+import 'package:monami/src/presentation/widgets/custom_button.dart';
+import 'package:monami/src/utils/constants/app_colors.dart';
 
 import 'widget/app_text.dart';
 

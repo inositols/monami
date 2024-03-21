@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:monami/enums/dart_sorting.dart';
-import '../../../../state/post/typedefs/post_id.dart';
+import 'package:monami/src/data/state/post/typedefs/post_id.dart';
 
 @immutable
 class RequestForPostAndComments {

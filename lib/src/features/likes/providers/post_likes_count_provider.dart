@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:monami/state/constants/firebase_collection.dart';
-import 'package:monami/state/constants/firebase_field_name.dart';
-import 'package:monami/state/post/typedefs/post_id.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
+import 'package:monami/src/data/state/post/typedefs/post_id.dart';
 
 final postLikesCountProvider =
     StreamProvider.family.autoDispose<int, PostId>((ref, PostId postId) {

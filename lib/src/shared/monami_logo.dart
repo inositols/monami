@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:monami/src/resources/app_assets.dart';
+import 'package:monami/src/utils/resources/app_assets.dart';
 
 class MonamiLogo extends StatelessWidget {
   final double? size;

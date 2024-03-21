@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monami/views/onboarding/components/constants/app_color.dart';
+import 'package:monami/src/utils/constants/app_colors.dart';
 
 import '../../domain/cart_model.dart';
 import 'app_text.dart';

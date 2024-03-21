@@ -15,6 +15,6 @@ void main() async {
   );
   await setupLocator();
   runApp(
-    DevicePreview(enabled: false, builder: (context) => const App()),
+    DevicePreview(enabled: true, builder: (context) => const App()),
   );
 }

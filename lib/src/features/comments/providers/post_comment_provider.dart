@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/src/features/comments/extensions/comment_sorting.dart';
 import 'package:monami/src/features/comments/models/posts_comment_request.dart';
-import 'package:monami/state/constants/firebase_collection.dart';
-import 'package:monami/state/constants/firebase_field_name.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
 
 import '../models/comments.dart';
 
@@ -16,7 +16,7 @@ final postCommentsProvider = StreamProvider.family
   final controller = StreamController<Iterable<Comment>>();
   //  final sub
   FirebaseFirestore.instance
-      .collection(FirebaseCollectionName.comments)
+      .collection(FirebaseCollectionName.reviews)
       .where(
         FirebaseFieldName.postId,
         isEqualTo: request.postId,

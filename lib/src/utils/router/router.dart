@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:monami/src/utils/router/route_name.dart';
-import 'package:monami/views/bottomnavigation/bottom_navigation_screen.dart';
-import 'package:monami/views/login/login_view.dart';
-import 'package:monami/views/onboarding/onboarding_view.dart';
-import 'package:monami/views/splash/splash_view.dart';
+import 'package:monami/src/presentation/views/bottomnavigation/bottom_navigation_screen.dart';
+import 'package:monami/src/presentation/views/login/login_view.dart';
+import 'package:monami/src/presentation/views/onboarding/onboarding_view.dart';
+import 'package:monami/src/presentation/views/splash/splash_view.dart';
 
 class RouteGenerator {
   ///Generates routes, extracts and passes navigation arguments.

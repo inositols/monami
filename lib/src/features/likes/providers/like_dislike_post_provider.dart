@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:monami/state/constants/firebase_collection.dart';
-import 'package:monami/state/constants/firebase_field_name.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
 import 'package:monami/src/features/likes/models/like_dislike_request.dart';
 import 'package:monami/src/features/likes/models/likes.dart';
 

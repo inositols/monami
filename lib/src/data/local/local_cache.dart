@@ -32,18 +32,6 @@ abstract class LocalCache {
   ///Clears cache
   Future<void> clearCache();
 
-  ///Saves a story ID for story deletion job
-  Future<void> saveStory({
-    required String id,
-    required String uploadTime,
-  });
-
-  ///Retrieves uploaded story IDs
-  List<Map<String, String>> getSavedStories();
-
-  ///Clears saved stories
-  Future<void> clearSavedStories();
-
   ///Persists login status
   Future<void> persistLoginStatus(bool isLoggedIn);
 
