@@ -23,7 +23,10 @@ class UserPostView extends ConsumerWidget {
             return PostGridView(posts: posts);
           }
         }, error: (error, stackTrace) {
-          return const ErrorAnimationView();
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const ErrorAnimationView(),
+          );
         }, loading: () {
           return const LoadingAnimationView();
         }),

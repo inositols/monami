@@ -19,7 +19,7 @@ class EmptyContentAnimationWihText extends StatelessWidget {
                 .titleMedium
                 ?.copyWith(color: Colors.white54),
           ),
-          const EmptyContentAnimationView()
+          // const EmptyContentAnimationView()
         ],
       ),
     );

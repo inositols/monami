@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monami/src/data/state/user_info/models/user_info_model.dart';
 
 abstract class AuthService {

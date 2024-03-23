@@ -46,6 +46,7 @@ class UserInfoModel extends MapView<String, String?> {
         FirebaseFieldName.displayName: displayName,
         FirebaseFieldName.email: email,
         FirebaseFieldName.phoneNumber: phoneNumber,
+        FirebaseFieldName.status: status,
         FirebaseFieldName.role: role,
       };
 
