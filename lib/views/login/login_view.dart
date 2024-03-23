@@ -7,6 +7,7 @@ import 'package:monami/custom_widgets/button_loader.dart';
 import 'package:monami/custom_widgets/custom_button.dart';
 import 'package:monami/custom_widgets/custom_textfield.dart';
 import 'package:monami/src/features/auth/providers/auth_state_provider.dart';
+import 'package:monami/src/shared/monami_logo.dart';
 import 'package:monami/views/onboarding/components/constants/app_color.dart';
 
 import 'component/custom_paint.dart';
@@ -77,21 +78,10 @@ class _LoginViewState extends State<LoginView> {
                     child: Container(
                       padding: const EdgeInsets.only(top: 80),
                       width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const FlutterLogo(size: 100),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text("MONAMI",
-                              style: GoogleFonts.stardosStencil(
-                                color: Colors.black,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
-                              )),
-                        ],
+                      child: const Center(
+                        child: MonamiLogo(
+                          size: 100,
+                        ),
                       ),
                     )),
                 Container(

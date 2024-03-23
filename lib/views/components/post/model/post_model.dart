@@ -15,7 +15,6 @@ final discoverList = [
   DiscoverItems('Cap', AppImage.cap1, 100),
   DiscoverItems('Cap', AppImage.cap2, 50),
   DiscoverItems('Cap', AppImage.cap3, 200),
-  DiscoverItems('Cap', AppImage.cap4, 600),
   DiscoverItems('Ring', AppImage.ring, 200),
   DiscoverItems('Ring', AppImage.ring1, 500),
   DiscoverItems('HeadPhones', AppImage.headphone, 300),

@@ -44,14 +44,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
         request,
       ),
     );
-
-    // can we delete this post?
-    final canDeletePost = ref.watch(
-      canCurrentUserDeletePostProvider(
-        widget.post,
-      ),
-    );
-
     return Scaffold(
       body: postWithComments.when(
         data: (postWithComments) {

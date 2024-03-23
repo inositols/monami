@@ -9,7 +9,7 @@ class AppImage {
   static const cap1 = "assets/images/cap_3.png";
   static const cap2 = "assets/images/cap_6.png";
   static const cap3 = "assets/images/cap_7.png";
-  static const cap4 = "assets/images/cap_10.png";
+
   static const bag = "assets/images/bag_1.png";
   static const bag1 = "assets/images/bag_2.png";
   static const bag2 = "assets/images/bag_4.png";
