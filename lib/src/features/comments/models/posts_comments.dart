@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:monami/state/post/models/post.dart';
+import 'package:monami/src/data/state/post/models/post.dart';
 import 'comments.dart';
 
 @immutable

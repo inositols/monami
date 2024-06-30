@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/src/features/comments/typedef/comment_typedef.dart';
-import 'package:monami/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
 import 'package:monami/src/features/image_upload/typedef/is_loading.dart';
 
 class DeleCommentStateNotifier extends StateNotifier<IsLoading> {
@@ -16,7 +16,7 @@ class DeleCommentStateNotifier extends StateNotifier<IsLoading> {
       isLoading = true;
       final query = FirebaseFirestore.instance
           .collection(
-            FirebaseCollectionName.comments,
+            FirebaseCollectionName.reviews,
           )
           .where(
             FieldPath.documentId,

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
-import 'package:monami/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
 import 'package:monami/src/features/image_upload/constants/constants.dart';
 import 'package:monami/src/features/image_upload/exception/could_not_build_thumbnail.dart';
 import 'package:monami/src/features/image_upload/extension/get_collectionname_from_file_type.dart';
@@ -13,8 +13,8 @@ import 'package:monami/src/features/image_upload/extension/get_image_data_aspect
 import 'package:monami/src/features/image_upload/models/file_type.dart';
 import 'package:monami/src/features/image_upload/typedef/is_loading.dart';
 // import 'package:monami/state/post/models/post_key.dart';
-import 'package:monami/state/post/models/post_payload.dart';
-import 'package:monami/state/post_settings/models/post_settings.dart';
+import 'package:monami/src/data/state/post/models/post_payload.dart';
+import 'package:monami/src/data/state/post_settings/models/post_settings.dart';
 import 'package:uuid/uuid.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -115,7 +115,7 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
         category: category,
       );
       await FirebaseFirestore.instance
-          .collection(FirebaseCollectionName.posts)
+          .collection(FirebaseCollectionName.products)
           .add(postPayload);
       return true;
     } catch (_) {

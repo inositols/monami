@@ -116,36 +116,6 @@ class LocalCacheImpl implements LocalCache {
   }
 
   @override
-  Future<void> saveStory({
-    required String id,
-    required String uploadTime,
-  }) async {
-    try {
-      final stories = getSavedStories();
-      stories.add({
-        "id": id,
-        "uploadTime": uploadTime,
-      });
-      await _sharedPreferences.setString(_savedStories, jsonEncode(stories));
-    } catch (e) {
-      _logger.log(e);
-    }
-  }
-
-  @override
-  List<Map<String, String>> getSavedStories() {
-    try {
-      final data = getFromLocalCache(_savedStories) as String? ?? "[]";
-      final stories =
-          (jsonDecode(data) as List).map((e) => Map<String, String>.from(e));
-      return List<Map<String, String>>.from(stories);
-    } catch (e) {
-      _logger.log(e);
-      return [];
-    }
-  }
-
-  @override
   bool getLoginStatus() {
     try {
       return getFromLocalCache(_loginStatus) as bool? ?? false;
@@ -162,10 +132,5 @@ class LocalCacheImpl implements LocalCache {
     } catch (e) {
       _logger.log(e);
     }
-  }
-
-  @override
-  Future<void> clearSavedStories() async {
-    await _sharedPreferences.remove(_savedStories);
   }
 }

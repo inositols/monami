@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:monami/src/features/comments/typedef/comment_typedef.dart';
-import 'package:monami/state/constants/firebase_field_name.dart';
-import 'package:monami/state/post/typedefs/post_id.dart';
-import 'package:monami/state/user_info/typedefs/user_id.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
+import 'package:monami/src/data/state/post/typedefs/post_id.dart';
+import 'package:monami/src/data/state/user_info/typedefs/user_id.dart';
 
 @immutable
 class Comment {
@@ -14,7 +14,7 @@ class Comment {
   final PostId onPostId;
 
   Comment(Map<String, dynamic> json, {required this.id})
-      : comment = json[FirebaseFieldName.comment],
+      : comment = json[FirebaseFieldName.review],
         createdAt = (json[FirebaseFieldName.creatAt] as Timestamp).toDate(),
         fromUserId = json[FirebaseFieldName.userId],
         onPostId = json[FirebaseFieldName.postId];

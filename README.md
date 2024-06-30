@@ -24,6 +24,10 @@ Monami is a versatile e-commerce mobile/web application built with Flutter. This
 - Payment screen
 - Track your order
 
+### Screenshots
+
+<img src="screens/onb.png" width="250"><img src="screens/login.png" width="250">
+
 ### Application structure
 
 After successful build, your application structure should look like this:

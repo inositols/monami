@@ -1,20 +1,19 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:monami/src/features/auth/providers/user_id_provider.dart';
-import 'package:monami/state/constants/firebase_collection.dart';
-import 'package:monami/state/constants/firebase_field_name.dart';
-import 'package:monami/state/post/typedefs/post_id.dart';
+import 'package:monami/src/data/provider/auth_service_provider.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
+import 'package:monami/src/data/state/post/typedefs/post_id.dart';
 
 final hasLikedPostProvider = StreamProvider.family.autoDispose<bool, PostId>(
   (
     ref,
     PostId postId,
   ) {
-    final userId = ref.watch(userIdProvider);
+    final userId = ref.watch(authServiceProvider);
 
-    if (userId == null) {
+    if (userId.localCache.getUserId() == null) {
       return Stream<bool>.value(false);
     }
 
