@@ -12,19 +12,26 @@ class SplashViewModel extends BaseViewModel {
   }
   Future<void> checkLoginStatus() async {
     try {
-      final isLoggedIn = localCache.getLoginStatus();
-
+      // Temporarily bypass login for UI testing
       await Future.delayed(const Duration(milliseconds: 1500));
+      
+      // Skip login and go directly to home to test the new UI
+      navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
+      
+      /* Original login check - commented out for UI testing
+      final isLoggedIn = localCache.getLoginStatus();
 
       if (isLoggedIn) {
         navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
       } else {
         navigationHandler.pushReplacementNamed(Routes.onboardingViewRoute);
       }
+      */
     } catch (e) {
       log(e);
       await Future.delayed(const Duration(milliseconds: 800));
-      navigationHandler.pushReplacementNamed(Routes.loginViewRoute);
+      // Skip login on error too - go directly to home for UI testing
+      navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
     }
   }
 }

@@ -4,18 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/src/presentation/widgets/custom_button.dart';
 import 'package:monami/src/presentation/widgets/custom_textfield.dart';
-import 'package:monami/src/features/image_upload/helpers/image_upload_helper.dart';
-import 'package:monami/src/features/image_upload/models/file_type.dart';
-import 'package:monami/src/data/state/post_settings/providers/post_settings_provider.dart';
+// Temporarily disabled for web compatibility
+// import 'package:monami/src/features/image_upload/helpers/image_upload_helper.dart';
+// import 'package:monami/src/features/image_upload/models/file_type.dart';
+// import 'package:monami/src/data/state/post_settings/providers/post_settings_provider.dart';
 import 'package:monami/src/utils/constants/app_colors.dart';
 import 'package:monami/src/utils/constants/app_images.dart';
 
 import 'dart:developer' as devtools show log;
 
-import '../create_post/create_new_post.dart';
-
-import '../user_post/user_post_view.dart';
-import 'component/tabs_item.dart';
+import '../product/product_detail_view.dart';
 
 extension Log on Object {
   void log() => devtools.log(toString());
@@ -28,220 +26,479 @@ class HomeView extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends ConsumerState<HomeView>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-
+class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
-    _tabController = TabController(length: 5, vsync: this);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, value) {
-          return [
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            // Header with Profile and Notifications
             SliverToBoxAdapter(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
-                child: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      height: 60,
-                      width: double.infinity,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        leading: const CircleAvatar(
-                          backgroundColor: AppColor.blackColor,
+                    Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.shade200,
+                          ),
+                          child:
+                              const Icon(Icons.menu, color: Color(0xFF2D3748)),
                         ),
-                        title: Text(
-                          "Good Morning",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.grey,
-                            fontSize: 22,
+                        const SizedBox(width: 16),
+                        Text(
+                          "Monami",
+                          style: GoogleFonts.inter(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF2D3748),
                           ),
                         ),
-                        subtitle: Text(
-                          "Okama Innocent",
-                          style: GoogleFonts.lato(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        ),
-                        trailing: const SizedBox(
-                          width: 100,
-                          child: Row(
-                            children: [
-                              Icon(Icons.notifications),
-                              SizedBox(
-                                width: 40,
-                              ),
-                              Icon(
-                                Icons.menu,
-                                color: AppColor.blackColor,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      height: 40,
-                      child: const CustomTextfield(
-                        prefixIcon: Icon(Icons.search),
-                        // hintText: "Search",
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      height: 150,
-                      width: double.maxFinite,
+                      width: 45,
+                      height: 45,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.black),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(12),
-                            width: MediaQuery.sizeOf(context).width / 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "new \ncollection".toUpperCase(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width: 100,
-                                  height: 40,
-                                  child: CustomButton(
-                                    radius: 8,
-                                    text: "Shop Now",
-                                    color: AppColor.whiteColor,
-                                    textColor: AppColor.blackColor,
-                                    onPressed: () {},
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(child: Image.asset(AppImage.cap1))
-                        ],
+                        shape: BoxShape.circle,
+                        color: Colors.grey.shade200,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(22.5),
+                        child: Image.asset(
+                          'assets/images/woman.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.person,
+                                color: Color(0xFF2D3748));
+                          },
+                        ),
                       ),
                     ),
-                    const Gap(15),
-                    SizedBox(
-                      height: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Categories",
-                            style: GoogleFonts.lato(
-                              color: Colors.black,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          Text(
-                            "View All",
-                            style: GoogleFonts.lato(
-                              color: Colors.grey,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Gap(20),
-                    Container(
-                      height: 40,
-                      padding: const EdgeInsets.only(left: 0, right: 10),
-                      child: TabBar(
-                          tabAlignment: TabAlignment.start,
-                          unselectedLabelColor: AppColor.blackColor,
-                          dividerColor: Colors.transparent,
-                          isScrollable: true,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          controller: _tabController,
-                          indicator: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(12)),
-                          labelColor: AppColor.whiteColor,
-                          tabs: tabItems
-                              .map((tabs) => Tab(
-                                    child: Container(
-                                      height: 40,
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: Colors.black, width: 1)),
-                                      child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(tabs.title)),
-                                    ),
-                                  ))
-                              .toList()),
-                    )
                   ],
                 ),
               ),
-            )
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          children: const [
-            UserPostView(),
-            UserPostView(),
-            UserPostView(),
-            UserPostView(),
-            UserPostView(),
+            ),
+
+            // Search Bar
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: CustomTextfield(
+                    hintText: "Search any Product...",
+                    prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
+                    suffixIcon: Icon(Icons.mic, color: Colors.grey.shade400),
+                    fillColor: Colors.white,
+                    hasBorderside: false,
+                  ),
+                ),
+              ),
+            ),
+
+            // Items Count and Filter
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "52,082+ Items",
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2D3748),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Sort",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF2D3748),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.swap_vert,
+                                  size: 16, color: Colors.grey.shade600),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Filter",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF2D3748),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.tune,
+                                  size: 16, color: Colors.grey.shade600),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Products Grid
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                delegate: SliverChildListDelegate([
+                  _buildProductCard(
+                    image: 'assets/images/bag_1.png',
+                    title: 'Black Winter...',
+                    subtitle:
+                        'Autumn And Winter Casual cotton-padded jacket...',
+                    price: '₹499',
+                    rating: 4.2,
+                    reviews: 2356,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/cap_1.png',
+                    title: 'Mens Starry',
+                    subtitle:
+                        'Mens Starry Sky Printed Shirt 100% Cotton Fabric',
+                    price: '₹399',
+                    rating: 4.8,
+                    reviews: 1024,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/womanshoe_3.png',
+                    title: 'Black Dress',
+                    subtitle:
+                        'Solid Black Dress for Women, Sexy Chain Shorts Ladi...',
+                    price: '₹2,000',
+                    rating: 4.1,
+                    reviews: 5647,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/bag_2.png',
+                    title: 'Pink Embroide...',
+                    subtitle: 'EARTHEN Rose Pink Embroidered Tiered Midi Dr...',
+                    price: '₹1,900',
+                    rating: 4.9,
+                    reviews: 3274,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/ring_2.png',
+                    title: 'Flare Dress',
+                    subtitle:
+                        'Antheaa Black & Rust Orange Flare Dress Tiered Midi F...',
+                    price: '₹1,990',
+                    rating: 4.3,
+                    reviews: 1205,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/cap_3.png',
+                    title: 'denim dress',
+                    subtitle:
+                        'Blue colour, denim dress Look 2 Pieces cotton dr...',
+                    price: '₹999',
+                    rating: 4.7,
+                    reviews: 2341,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/shoeman_7.png',
+                    title: 'Jordan Stay',
+                    subtitle:
+                        'The classic Air Jordan 13 is made to create a shoe that\'s fre...',
+                    price: '₹6,999',
+                    rating: 4.6,
+                    reviews: 1245,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/headphone_6.png',
+                    title: 'Realme 7',
+                    subtitle: 'GST 8MP | 16 GB ROM | Expandable Upto 256...',
+                    price: '₹3,699',
+                    rating: 4.2,
+                    reviews: 5467,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/bag_4.png',
+                    title: 'Black Jacket 12...',
+                    subtitle:
+                        'This warm and comfortable jacket is great for learn...',
+                    price: '₹2,999',
+                    rating: 4.5,
+                    reviews: 1342,
+                  ),
+                  _buildProductCard(
+                    image: 'assets/images/womanshoe_5.png',
+                    title: 'men\'s & boys s...',
+                    subtitle: 'George Walker Derby Brown Formal Shoes',
+                    price: '₹999',
+                    rating: 4.0,
+                    reviews: 2156,
+                  ),
+                ]),
+              ),
+            ),
+
+            // Bottom Spacing
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 100),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.small(
-          onPressed: () async {
-            final imageFile = await ImagePickerHelper.pickerImageFromGallery();
-            if (imageFile == null) {
-              return;
-            }
-            ref.refresh(postSettingProvider);
-            if (!mounted) {
-              return;
-            }
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(
-                builder: (_) => CreateNewPostView(
-                      fileToPost: imageFile,
-                      fileType: FileType.image,
-                    )));
-          },
-          child: const Icon(Icons.add_circle)),
+    );
+  }
+
+  Widget _buildProductCard({
+    required String image,
+    required String title,
+    required String subtitle,
+    required String price,
+    required double rating,
+    required int reviews,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                ProductDetailView(
+              image: image,
+              title: title,
+              subtitle: subtitle,
+              price: price,
+              rating: rating,
+              reviews: reviews,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOutCubic;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 500),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Image
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                  child: Image.asset(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey.shade200,
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.grey.shade400,
+                          size: 40,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            // Product Details
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2D3748),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Flexible(
+                      child: Text(
+                        subtitle,
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey.shade600,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      price,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF2D3748),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(5, (index) {
+                              return Icon(
+                                index < rating.floor()
+                                    ? Icons.star
+                                    : Icons.star_outline,
+                                size: 10,
+                                color: Colors.orange,
+                              );
+                            }),
+                          ),
+                          const SizedBox(width: 2),
+                          Flexible(
+                            child: Text(
+                              '$rating (${reviews.toString().length > 4 ? "${(reviews / 1000).toStringAsFixed(1)}k" : reviews})',
+                              style: GoogleFonts.inter(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavItem(IconData icon, String label, bool isSelected) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: isSelected ? Colors.red : Colors.grey.shade600,
+          size: 24,
+        ),
+        if (label.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.red : Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

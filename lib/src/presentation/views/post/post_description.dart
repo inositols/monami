@@ -115,9 +115,9 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                 PostDisplayNameAndMessageView(
                   post: postWithComments.post,
                 ),
-                PostDateView(
-                  dateTime: postWithComments.post.createdAt,
-                ),
+                // PostDateView(
+                //   dateTime: postWithComments.post.createdAt,
+                // ),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Divider(

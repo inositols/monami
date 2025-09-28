@@ -28,10 +28,10 @@ dependencies:
   gap: ^3.0.1
   get_it: ^7.6.0
   google_fonts: ^5.1.0
-  google_sign_in: ^6.0.2
+  google_sign_in: null
   hooks_riverpod: ^2.3.0
   image: null
-  image_picker: ^1.0.1
+  # image_picker: null
   intl: null
   lottie: ^2.2.0
   share_plus: ^7.0.2
