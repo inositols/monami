@@ -31,7 +31,7 @@ dependencies:
   google_sign_in: null
   hooks_riverpod: ^2.3.0
   image: null
-  # image_picker: null
+  image_picker: ^1.1.2
   intl: null
   lottie: ^2.2.0
   share_plus: ^7.0.2
