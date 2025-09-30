@@ -9,7 +9,7 @@ import 'package:monami/src/utils/router/locator.dart';
 import 'package:monami/src/services/storage_service.dart';
 import 'package:monami/src/models/product_model.dart';
 
-import 'package:device_preview/device_preview.dart' show DevicePreview;
+// import 'package:device_preview/device_preview.dart' show DevicePreview;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,26 +22,31 @@ void main() async {
   await setupLocator();
   await StorageService.init();
   await _initializeSampleData();
-  
+
   runApp(
-    DevicePreview(enabled: true, builder: (context) => const App()),
+    const App(),
   );
 }
 
 Future<void> _initializeSampleData() async {
   // Check if products already exist
   final existingProducts = await StorageService.getProducts();
-  if (existingProducts.isNotEmpty) return; // Don't add samples if products exist
+  if (existingProducts.isNotEmpty)
+    return; // Don't add samples if products exist
 
   // Add sample products
   final sampleProducts = [
     Product(
       id: '1',
       name: 'Premium Wireless Headphones',
-      description: 'High-quality wireless headphones with noise cancellation and premium sound quality.',
+      description:
+          'High-quality wireless headphones with noise cancellation and premium sound quality.',
       price: 299.99,
       category: 'Electronics',
-      images: ['assets/images/headphone_6.png', 'assets/images/headphone_7.png'],
+      images: [
+        'assets/images/headphone_6.png',
+        'assets/images/headphone_7.png'
+      ],
       colors: ['Black', 'White', 'Silver'],
       sizes: ['Standard'],
       stockQuantity: 50,
@@ -53,7 +58,8 @@ Future<void> _initializeSampleData() async {
     Product(
       id: '2',
       name: 'Designer Handbag',
-      description: 'Elegant designer handbag perfect for both casual and formal occasions.',
+      description:
+          'Elegant designer handbag perfect for both casual and formal occasions.',
       price: 189.50,
       category: 'Fashion',
       images: ['assets/images/bag_1.png', 'assets/images/bag_2.png'],
@@ -68,7 +74,8 @@ Future<void> _initializeSampleData() async {
     Product(
       id: '3',
       name: 'Elegant Ring Collection',
-      description: 'Beautiful handcrafted rings made with premium materials and attention to detail.',
+      description:
+          'Beautiful handcrafted rings made with premium materials and attention to detail.',
       price: 89.99,
       category: 'Fashion',
       images: ['assets/images/ring_2.png', 'assets/images/ring_4.png'],
@@ -83,7 +90,8 @@ Future<void> _initializeSampleData() async {
     Product(
       id: '4',
       name: 'Stylish Baseball Cap',
-      description: 'Comfortable and stylish baseball cap perfect for outdoor activities.',
+      description:
+          'Comfortable and stylish baseball cap perfect for outdoor activities.',
       price: 45.00,
       category: 'Fashion',
       images: ['assets/images/cap_1.png', 'assets/images/cap_3.png'],
@@ -98,7 +106,8 @@ Future<void> _initializeSampleData() async {
     Product(
       id: '5',
       name: 'Gaming Headphones',
-      description: 'Professional gaming headphones with surround sound and comfortable design.',
+      description:
+          'Professional gaming headphones with surround sound and comfortable design.',
       price: 159.99,
       category: 'Electronics',
       images: ['assets/images/headphone_8.png'],

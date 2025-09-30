@@ -581,7 +581,7 @@ class _EditProfileViewState extends State<EditProfileView>
           ),
         );
         
-        Navigator.pop(context);
+        Navigator.pop(context, true); // Return true to indicate successful update
       }
     } catch (e) {
       if (mounted) {

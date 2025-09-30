@@ -14,18 +14,18 @@ class Slide {
 
 final slideList = [
   Slide(
-    imageUrl: AppImage.yuri,
+    imageUrl: AppImage.headphone1,
     title: 'Discover Trends',
-    description: '',
+    description: 'Stay ahead with the latest fashion trends and styles',
   ),
   Slide(
-    imageUrl: AppImage.cap3,
+    imageUrl: AppImage.headphone2,
     title: 'Discover Trend',
-    description: '',
+    description: 'Express yourself through the art of fashionism',
   ),
   Slide(
     imageUrl: AppImage.headphone3,
     title: 'Discover Fashions',
-    description: '',
+    description: 'Find your unique style and make it your own',
   ),
 ];
