@@ -12,13 +12,12 @@ class SplashViewModel extends BaseViewModel {
   }
   Future<void> checkLoginStatus() async {
     try {
-      // Temporarily bypass login for UI testing
       await Future.delayed(const Duration(milliseconds: 1500));
-      
+
       // Skip login and go directly to home to test the new UI
-      navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
-      
-      /* Original login check - commented out for UI testing
+      // navigationHandler.pushReplacementNamed(Routes.onboardingViewRoute);
+
+      //Original login check - commented out for UI testing
       final isLoggedIn = localCache.getLoginStatus();
 
       if (isLoggedIn) {
@@ -26,7 +25,6 @@ class SplashViewModel extends BaseViewModel {
       } else {
         navigationHandler.pushReplacementNamed(Routes.onboardingViewRoute);
       }
-      */
     } catch (e) {
       log(e);
       await Future.delayed(const Duration(milliseconds: 800));

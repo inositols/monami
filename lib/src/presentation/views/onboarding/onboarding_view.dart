@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:monami/src/utils/constants/app_colors.dart';
-
 import '../login/login_view.dart';
 import 'components/model/slide_model.dart';
-import 'components/widgets/slide_dots.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -33,114 +30,166 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.bgColor,
-        body: SizedBox(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 1.5,
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        height: MediaQuery.sizeOf(context).height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF667EEA),
+              Color(0xFF764BA2),
+            ],
+          ),
+        ),
+        child: Column(
+          children: [
+            // Image section with gradient background
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
                 child: PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    controller: _pageController,
-                    onPageChanged: _onPageChanged,
-                    itemCount: slideList.length,
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        color: AppColor.bgColor,
-                        padding: const EdgeInsets.all(20),
-                        width: double.maxFinite,
-                        height: MediaQuery.of(context).size.height / 1.7,
-                        child: Image.asset(slideList[i].imageUrl),
-                      );
-                    }),
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  itemCount: slideList.length,
+                  itemBuilder: (ctx, i) {
+                    return Center(
+                      child: Image.asset(
+                        slideList[i].imageUrl,
+                        fit: BoxFit.contain,
+                        height: double.infinity,
+                      ),
+                    );
+                  },
+                ),
               ),
-              CustomPaint(
-                  painter: BottomClip(),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
+            ),
+
+            // White curved bottom section with custom paint
+            Expanded(
+              flex: 2,
+              child: CustomPaint(
+                painter: BottomClip(),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(30, 60, 30, 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Dots indicator
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < slideList.length; i++)
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: i == _currentPage ? 24 : 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: i == _currentPage
+                                    ? const Color(0xFF667EEA)
+                                    : Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      // Title and Description section - Flexible
+                      Flexible(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            for (int i = 0; i < slideList.length; i++)
-                              if (i == _currentPage)
-                                const SlideDots(true)
-                              else
-                                const SlideDots(false)
+                            // Title
+                            Text(
+                              slideList[_currentPage].title,
+                              style: GoogleFonts.inter(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF1A1A1A),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Description
+                            Text(
+                              slideList[_currentPage].description,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF6B7280),
+                                height: 1.4,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          slideList[1].title,
-                          style: GoogleFonts.montserrat(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text('Express yourself through the art',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey)),
-                        Text(
-                          'of the fashionism',
-                          style: GoogleFonts.montserrat(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey),
-                        ),
-                        const SizedBox(height: 50),
-                        InkWell(
-                          onTap: () {
+                      ),
+
+                      // Circular button
+                      GestureDetector(
+                        onTap: () {
+                          if (_currentPage < slideList.length - 1) {
+                            // Move to next slide
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          } else {
+                            // Go to login screen when at last slide
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginView()));
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                    color: AppColor.bgColor,
-                                    borderRadius: BorderRadius.circular(50)),
-                              ),
-                              Positioned(
-                                top: 5,
-                                left: 5,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColor.bgColor,
-                                      borderRadius: BorderRadius.circular(50)),
-                                  height: 50,
-                                  width: 50,
-                                  child: const Icon(
-                                    FontAwesomeIcons.arrowRight,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                          }
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF667EEA),
+                                Color(0xFF764BA2),
+                              ],
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF667EEA).withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
                               ),
                             ],
                           ),
+                          child: const Icon(
+                            FontAwesomeIcons.arrowRight,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
-                        const SizedBox(
-                          height: 30,
-                        )
-                      ],
-                    ),
-                  )),
-            ],
-          ),
-        ));
+                      ),
+
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

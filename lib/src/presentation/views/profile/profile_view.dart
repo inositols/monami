@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monami/src/presentation/views/onboarding/onboarding_view.dart';
 import '../../../services/storage_service.dart';
 import '../favorites/favorites_view.dart';
 import '../product/create_product_view.dart';
@@ -18,6 +19,27 @@ class _ProfileViewState extends State<ProfileView> {
   bool biometricLogin = true;
   bool biometricTransaction = true;
   bool notificationsEnabled = true;
+  Map<String, dynamic>? userProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    try {
+      final profile = await StorageService.getUserProfile();
+      if (mounted) {
+        setState(() {
+          userProfile = profile;
+        });
+      }
+    } catch (e) {
+      // Handle error
+      print('Error loading user profile: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +88,14 @@ class _ProfileViewState extends State<ProfileView> {
                             GestureDetector(
                               onTap: _showNotifications,
                               child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.2),
-                              ),
-                              child: const Icon(Icons.notifications_outlined,
-                                  color: Colors.white, size: 20),
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                                child: const Icon(Icons.notifications_outlined,
+                                    color: Colors.white, size: 20),
                               ),
                             ),
                           ],
@@ -109,22 +131,22 @@ class _ProfileViewState extends State<ProfileView> {
                             right: 0,
                             child: GestureDetector(
                               onTap: _changeProfilePicture,
-                            child: Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(Icons.camera_alt,
-                                  color: Color(0xFF667EEA), size: 18),
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.camera_alt,
+                                    color: Color(0xFF667EEA), size: 18),
                               ),
                             ),
                           ),
@@ -134,22 +156,22 @@ class _ProfileViewState extends State<ProfileView> {
                       // User Name
                       Column(
                         children: [
-                      Text(
-                        "Okama Innocent",
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "okama.innocent@email.com",
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
+                          Text(
+                            userProfile?['name'] ?? 'User',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            userProfile?['email'] ?? 'user@email.com',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
                           ),
                         ],
                       ),
@@ -174,13 +196,17 @@ class _ProfileViewState extends State<ProfileView> {
                         icon: Icons.person_outline,
                         title: "Edit Personal Info",
                         subtitle: "Update your personal information",
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const EditProfileView(),
                             ),
                           );
+                          // Refresh profile data when returning
+                          if (result == true || result == null) {
+                            _loadUserProfile();
+                          }
                         },
                       ),
                       _buildModernListTile(
@@ -225,7 +251,8 @@ class _ProfileViewState extends State<ProfileView> {
                               SnackBar(
                                 content: Text(
                                   'Product created successfully! Check the home screen.',
-                                  style: GoogleFonts.inter(fontWeight: FontWeight.w500),
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w500),
                                 ),
                                 backgroundColor: Colors.green.shade400,
                                 duration: const Duration(seconds: 3),
@@ -233,53 +260,6 @@ class _ProfileViewState extends State<ProfileView> {
                             );
                           }
                         },
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Account Section
-                  _buildSection(
-                    title: "Account",
-                    items: [
-                      _buildModernListTile(
-                        icon: Icons.lock_outline,
-                        title: "Reset Transaction Pin",
-                        subtitle: "Change your security pin",
-                        onTap: _resetTransactionPin,
-                      ),
-                      _buildModernListTile(
-                        icon: Icons.fingerprint,
-                        title: "Biometric Login",
-                        subtitle: "Use fingerprint to login",
-                        onTap: () {},
-                        trailing: CupertinoSwitch(
-                          value: biometricLogin,
-                          onChanged: (val) {
-                            setState(() {
-                              biometricLogin = val;
-                            });
-                            _saveBiometricPreference('login', val);
-                          },
-                          activeColor: const Color(0xFF667EEA),
-                        ),
-                      ),
-                      _buildModernListTile(
-                        icon: Icons.security,
-                        title: "Biometric Transaction",
-                        subtitle: "Secure transactions with biometrics",
-                        onTap: () {},
-                        trailing: CupertinoSwitch(
-                          value: biometricTransaction,
-                          onChanged: (val) {
-                            setState(() {
-                              biometricTransaction = val;
-                            });
-                            _saveBiometricPreference('transaction', val);
-                          },
-                          activeColor: const Color(0xFF667EEA),
-                        ),
                       ),
                     ],
                   ),
@@ -552,78 +532,6 @@ class _ProfileViewState extends State<ProfileView> {
         );
       },
     );
-  }
-
-  void _resetTransactionPin() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            'Reset Transaction Pin',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A202C),
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to reset your transaction pin? You will need to set up a new one.',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              color: const Color(0xFF718096),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF718096),
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _showMessage('Transaction pin reset successfully');
-              },
-              child: Text(
-                'Reset',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _saveBiometricPreference(String type, bool value) async {
-    try {
-      final profile = await StorageService.getUserProfile();
-      final preferences = profile?['preferences'] ?? {};
-      preferences['biometric_$type'] = value;
-      
-      await StorageService.saveUserProfile({
-        ...?profile,
-        'preferences': preferences,
-      });
-      
-      _showMessage('${type == 'login' ? 'Login' : 'Transaction'} biometric ${value ? 'enabled' : 'disabled'}');
-    } catch (e) {
-      _showMessage('Error saving preference');
-    }
   }
 
   void _manageNotifications() {
@@ -903,6 +811,14 @@ class _ProfileViewState extends State<ProfileView> {
                 Navigator.pop(context);
                 // Clear all data on logout
                 await StorageService.clearAllData();
+                if (context.mounted) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingScreen(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                }
                 _showMessage('Logged out successfully');
               },
               child: Text(
