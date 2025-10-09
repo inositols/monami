@@ -1,0 +1,25 @@
+mutation SeedProducts @auth(level: USER) {
+  product_insertMany(data: [
+    {
+      name: "Awesome T-Shirt",
+      description: "A high-quality t-shirt that looks awesome.",
+      price: 25.00,
+      stockQuantity: 100,
+      category: "Apparel"
+    },
+    {
+      name: "Fantastic Coffee Mug",
+      description: "A coffee mug to start your day in a fantastic way.",
+      price: 12.50,
+      stockQuantity: 50,
+      category: "Home & Kitchen"
+    },
+    {
+      name: "Incredible Laptop",
+      description: "A powerful laptop with incredible performance.",
+      price: 1200.00,
+      stockQuantity: 20,
+      category: "Electronics"
+    }
+  ])
+}
