@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monami/src/presentation/widgets/custom_button.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -117,6 +118,7 @@ class _CheckoutViewState extends State<CheckoutView>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
+        top: false,
         child: AnimatedBuilder(
           animation: _fadeAnimation,
           builder: (context, child) {
@@ -135,7 +137,8 @@ class _CheckoutViewState extends State<CheckoutView>
                             _buildShippingAddress(),
                             _buildPaymentMethods(),
                             _buildOrderSummary(),
-                            const SizedBox(height: 100), // Space for bottom button
+                            const SizedBox(
+                                height: 100), // Space for bottom button
                           ],
                         ),
                       ),
@@ -153,7 +156,7 @@ class _CheckoutViewState extends State<CheckoutView>
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -443,7 +446,8 @@ class _CheckoutViewState extends State<CheckoutView>
               if (address.isDefault) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green.shade100,
                     borderRadius: BorderRadius.circular(6),
@@ -537,7 +541,9 @@ class _CheckoutViewState extends State<CheckoutView>
               ],
             ),
             const SizedBox(height: 16),
-            ...paymentMethods.map((method) => _buildPaymentMethodTile(method)).toList(),
+            ...paymentMethods
+                .map((method) => _buildPaymentMethodTile(method))
+                .toList(),
           ],
         ),
       ),
@@ -546,7 +552,7 @@ class _CheckoutViewState extends State<CheckoutView>
 
   Widget _buildPaymentMethodTile(PaymentMethod method) {
     final isSelected = selectedPaymentMethod == method.id;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -557,10 +563,13 @@ class _CheckoutViewState extends State<CheckoutView>
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF667EEA).withOpacity(0.05) : const Color(0xFFF8FAFC),
+          color: isSelected
+              ? const Color(0xFF667EEA).withOpacity(0.05)
+              : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE2E8F0),
+            color:
+                isSelected ? const Color(0xFF667EEA) : const Color(0xFFE2E8F0),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -569,7 +578,9 @@ class _CheckoutViewState extends State<CheckoutView>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE2E8F0),
+                color: isSelected
+                    ? const Color(0xFF667EEA)
+                    : const Color(0xFFE2E8F0),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -826,14 +837,16 @@ class _CheckoutViewState extends State<CheckoutView>
     try {
       final order = Order(
         id: 'ORD${DateTime.now().millisecondsSinceEpoch}',
-        items: widget.items.map((item) => CartItem(
-          productId: item.id.toString(),
-          productName: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image,
-          addedAt: DateTime.now(),
-        )).toList(),
+        items: widget.items
+            .map((item) => CartItem(
+                  productId: item.id.toString(),
+                  productName: item.name,
+                  price: item.price,
+                  quantity: item.quantity,
+                  image: item.image,
+                  addedAt: DateTime.now(),
+                ))
+            .toList(),
         subtotal: widget.subtotal,
         shipping: widget.shipping,
         tax: widget.tax,
@@ -911,36 +924,16 @@ class _CheckoutViewState extends State<CheckoutView>
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                Container(
+                CustomButton(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () {
-                        Navigator.of(context).pop(); // Close dialog
-                        Navigator.of(context).pop(true); // Go back with success result
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Text(
-                          'Continue Shopping',
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
+                  gradient: const [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  text: "Continue Shopping",
+                  radius: 12,
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.of(context)
+                        .pop(true); // Go back with success result
+                  },
                 ),
               ],
             ),
@@ -979,18 +972,20 @@ class _CheckoutViewState extends State<CheckoutView>
                   ),
                 ),
                 const SizedBox(height: 20),
-                ...addresses.map((address) => GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedAddressIndex = address.id;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: _buildAddressCard(address),
-                  ),
-                )).toList(),
+                ...addresses
+                    .map((address) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedAddressIndex = address.id;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            child: _buildAddressCard(address),
+                          ),
+                        ))
+                    .toList(),
                 const SizedBox(height: 16),
                 Container(
                   width: double.infinity,

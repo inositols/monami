@@ -79,6 +79,7 @@ class _EditProfileViewState extends State<EditProfileView>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
+        top: false,
         child: AnimatedBuilder(
           animation: _fadeAnimation,
           builder: (context, child) {
@@ -117,7 +118,7 @@ class _EditProfileViewState extends State<EditProfileView>
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -234,7 +235,8 @@ class _EditProfileViewState extends State<EditProfileView>
                   height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFFE2E8F0), width: 4),
+                    border:
+                        Border.all(color: const Color(0xFFE2E8F0), width: 4),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -263,7 +265,8 @@ class _EditProfileViewState extends State<EditProfileView>
                         SnackBar(
                           content: Text(
                             'Image picker would open here',
-                            style: GoogleFonts.inter(fontWeight: FontWeight.w500),
+                            style:
+                                GoogleFonts.inter(fontWeight: FontWeight.w500),
                           ),
                           backgroundColor: const Color(0xFF667EEA),
                         ),
@@ -374,7 +377,8 @@ class _EditProfileViewState extends State<EditProfileView>
                 if (value == null || value.isEmpty) {
                   return 'Please enter your email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                    .hasMatch(value)) {
                   return 'Please enter a valid email';
                 }
                 return null;
@@ -520,7 +524,8 @@ class _EditProfileViewState extends State<EditProfileView>
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -580,8 +585,9 @@ class _EditProfileViewState extends State<EditProfileView>
             backgroundColor: Colors.green.shade400,
           ),
         );
-        
-        Navigator.pop(context, true); // Return true to indicate successful update
+
+        Navigator.pop(
+            context, true); // Return true to indicate successful update
       }
     } catch (e) {
       if (mounted) {

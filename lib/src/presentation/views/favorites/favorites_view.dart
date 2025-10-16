@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monami/src/presentation/views/favorites/widget/empty.dart';
+import 'package:monami/src/presentation/views/favorites/widget/header.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -51,7 +53,7 @@ class _FavoritesViewState extends State<FavoritesView>
     try {
       final favoriteIds = await StorageService.getFavorites();
       final allProducts = await StorageService.getProducts();
-      
+
       favoriteProducts = allProducts
           .map((productData) => Product.fromJson(productData))
           .where((product) => favoriteIds.contains(product.id))
@@ -76,6 +78,7 @@ class _FavoritesViewState extends State<FavoritesView>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
+        top: false,
         child: AnimatedBuilder(
           animation: _fadeAnimation,
           builder: (context, child) {
@@ -83,166 +86,33 @@ class _FavoritesViewState extends State<FavoritesView>
               opacity: _fadeAnimation.value,
               child: Column(
                 children: [
-                  _buildHeader(),
+                  SectionHeader(
+                    title: 'Your Favorites',
+                    icon: Icons.favorite,
+                    items: favoriteProducts,
+                    isLoading: isLoading,
+                    itemLabel: "items in your wishlist",
+                  ),
                   Expanded(
                     child: isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : favoriteProducts.isEmpty
-                            ? _buildEmptyState()
+                            ? EmptyState(
+                                slideAnimation: _slideAnimation,
+                                icon: Icons.favorite_border,
+                                iconColor: const Color(0xFF667EEA),
+                                title: 'No Favorites Yet',
+                                subtitle:
+                                    'Start exploring and add items\nto your favorites list',
+                                onButtonTap: () {
+                                  // Navigate to shop/explore
+                                })
                             : _buildFavoritesList(),
                   ),
                 ],
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x0A000000),
-            blurRadius: 20,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'My Favorites',
-                style: GoogleFonts.inter(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1A202C),
-                  letterSpacing: -0.5,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF667EEA).withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            isLoading ? 'Loading...' : '${favoriteProducts.length} items in your wishlist',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF718096),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: const Color(0xFF667EEA).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.favorite_border,
-                size: 60,
-                color: Color(0xFF667EEA),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'No Favorites Yet',
-              style: GoogleFonts.inter(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A202C),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Start exploring and add items\nto your favorites list',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF718096),
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 32),
-            Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF667EEA).withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    // Navigate to shop/explore
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    child: Text(
-                      'Start Shopping',
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -309,7 +179,9 @@ class _FavoritesViewState extends State<FavoritesView>
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Image.asset(
-                            product.images.isNotEmpty ? product.images.first : 'assets/images/bag_1.png',
+                            product.images.isNotEmpty
+                                ? product.images.first
+                                : 'assets/images/bag_1.png',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
@@ -325,9 +197,9 @@ class _FavoritesViewState extends State<FavoritesView>
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Product Details
                     Expanded(
                       child: Column(
@@ -343,9 +215,9 @@ class _FavoritesViewState extends State<FavoritesView>
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Rating
                           Row(
                             children: [
@@ -373,9 +245,9 @@ class _FavoritesViewState extends State<FavoritesView>
                               ),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Price
                           Text(
                             '\$${product.price.toStringAsFixed(2)}',
@@ -385,9 +257,9 @@ class _FavoritesViewState extends State<FavoritesView>
                               color: const Color(0xFF667EEA),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Stock Status
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -412,13 +284,14 @@ class _FavoritesViewState extends State<FavoritesView>
                         ],
                       ),
                     ),
-                    
+
                     // Action Buttons
                     Column(
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            await StorageService.removeFromFavorites(product.id);
+                            await StorageService.removeFromFavorites(
+                                product.id);
                             await _loadFavorites(); // Reload favorites
                             if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -452,9 +325,7 @@ class _FavoritesViewState extends State<FavoritesView>
                             ),
                           ),
                         ),
-                        
                         const SizedBox(height: 12),
-                        
                         GestureDetector(
                           onTap: product.isAvailable
                               ? () async {
@@ -462,13 +333,15 @@ class _FavoritesViewState extends State<FavoritesView>
                                     'productId': product.id,
                                     'productName': product.name,
                                     'price': product.price,
-                                    'image': product.images.isNotEmpty ? product.images.first : 'assets/images/bag_1.png',
+                                    'image': product.images.isNotEmpty
+                                        ? product.images.first
+                                        : 'assets/images/bag_1.png',
                                     'quantity': 1,
                                     'addedAt': DateTime.now().toIso8601String(),
                                   };
-                                  
+
                                   await StorageService.addToCart(cartItem);
-                                  
+
                                   if (mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -481,7 +354,8 @@ class _FavoritesViewState extends State<FavoritesView>
                                         backgroundColor: Colors.green.shade400,
                                         behavior: SnackBarBehavior.floating,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         duration: const Duration(seconds: 2),
                                       ),
@@ -518,4 +392,3 @@ class _FavoritesViewState extends State<FavoritesView>
     );
   }
 }
-
