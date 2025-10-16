@@ -14,6 +14,8 @@ import 'package:monami/src/utils/constants/app_images.dart';
 import 'dart:developer' as devtools show log;
 
 import '../product/product_detail_view.dart';
+import '../../../models/product_model.dart';
+import '../../../services/storage_service.dart';
 
 extension Log on Object {
   void log() => devtools.log(toString());
@@ -26,10 +28,38 @@ class HomeView extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
 }
 
+// Add a global key to access the home view state
+final GlobalKey<_HomeViewState> homeViewKey = GlobalKey<_HomeViewState>();
+
 class _HomeViewState extends ConsumerState<HomeView> {
+  List<Product> products = [];
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    try {
+      final productsData = await StorageService.getProducts();
+      products = productsData.map((data) => Product.fromJson(data)).toList();
+    } catch (e) {
+      // Handle error
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Public method to refresh products from external calls
+  void refreshProducts() {
+    setState(() {
+      isLoading = true;
+    });
+    _loadProducts();
   }
 
   @override
@@ -128,7 +158,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "52,082+ Items",
+                      isLoading ? "Loading..." : "${products.length} Items",
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -194,106 +224,70 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
 
             // Products Grid
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                delegate: SliverChildListDelegate([
-                  _buildProductCard(
-                    image: 'assets/images/bag_1.png',
-                    title: 'Black Winter...',
-                    subtitle:
-                        'Autumn And Winter Casual cotton-padded jacket...',
-                    price: '₹499',
-                    rating: 4.2,
-                    reviews: 2356,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/cap_1.png',
-                    title: 'Mens Starry',
-                    subtitle:
-                        'Mens Starry Sky Printed Shirt 100% Cotton Fabric',
-                    price: '₹399',
-                    rating: 4.8,
-                    reviews: 1024,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/womanshoe_3.png',
-                    title: 'Black Dress',
-                    subtitle:
-                        'Solid Black Dress for Women, Sexy Chain Shorts Ladi...',
-                    price: '₹2,000',
-                    rating: 4.1,
-                    reviews: 5647,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/bag_2.png',
-                    title: 'Pink Embroide...',
-                    subtitle: 'EARTHEN Rose Pink Embroidered Tiered Midi Dr...',
-                    price: '₹1,900',
-                    rating: 4.9,
-                    reviews: 3274,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/ring_2.png',
-                    title: 'Flare Dress',
-                    subtitle:
-                        'Antheaa Black & Rust Orange Flare Dress Tiered Midi F...',
-                    price: '₹1,990',
-                    rating: 4.3,
-                    reviews: 1205,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/cap_3.png',
-                    title: 'denim dress',
-                    subtitle:
-                        'Blue colour, denim dress Look 2 Pieces cotton dr...',
-                    price: '₹999',
-                    rating: 4.7,
-                    reviews: 2341,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/shoeman_7.png',
-                    title: 'Jordan Stay',
-                    subtitle:
-                        'The classic Air Jordan 13 is made to create a shoe that\'s fre...',
-                    price: '₹6,999',
-                    rating: 4.6,
-                    reviews: 1245,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/headphone_6.png',
-                    title: 'Realme 7',
-                    subtitle: 'GST 8MP | 16 GB ROM | Expandable Upto 256...',
-                    price: '₹3,699',
-                    rating: 4.2,
-                    reviews: 5467,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/bag_4.png',
-                    title: 'Black Jacket 12...',
-                    subtitle:
-                        'This warm and comfortable jacket is great for learn...',
-                    price: '₹2,999',
-                    rating: 4.5,
-                    reviews: 1342,
-                  ),
-                  _buildProductCard(
-                    image: 'assets/images/womanshoe_5.png',
-                    title: 'men\'s & boys s...',
-                    subtitle: 'George Walker Derby Brown Formal Shoes',
-                    price: '₹999',
-                    rating: 4.0,
-                    reviews: 2156,
-                  ),
-                ]),
-              ),
-            ),
+            isLoading
+                ? const SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(40),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  )
+                : products.isEmpty
+                    ? SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(40),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.inventory_2_outlined,
+                                  size: 64,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No Products Available',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Create products from the profile section',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.75,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final product = products[index];
+                              return _buildProductCard(
+                                product: product,
+                              );
+                            },
+                            childCount: products.length,
+                          ),
+                        ),
+                      ),
 
             // Bottom Spacing
             const SliverToBoxAdapter(
@@ -306,12 +300,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Widget _buildProductCard({
-    required String image,
-    required String title,
-    required String subtitle,
-    required String price,
-    required double rating,
-    required int reviews,
+    required Product product,
   }) {
     return GestureDetector(
       onTap: () {
@@ -320,12 +309,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ProductDetailView(
-              image: image,
-              title: title,
-              subtitle: subtitle,
-              price: price,
-              rating: rating,
-              reviews: reviews,
+              image: product.images.isNotEmpty
+                  ? product.images.first
+                  : 'assets/images/bag_1.png',
+              title: product.name,
+              subtitle: product.description,
+              price: '\$${product.price.toStringAsFixed(2)}',
+              rating: product.rating,
+              reviews: product.reviewCount,
+              productId: product.id,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -379,7 +371,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     topRight: Radius.circular(12),
                   ),
                   child: Image.asset(
-                    image,
+                    product.images.isNotEmpty
+                        ? product.images.first
+                        : 'assets/images/bag_1.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -406,7 +400,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      title,
+                      product.name,
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -418,7 +412,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     const SizedBox(height: 2),
                     Flexible(
                       child: Text(
-                        subtitle,
+                        product.description,
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
@@ -430,7 +424,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      price,
+                      '\$${product.price.toStringAsFixed(2)}',
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -445,7 +439,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             mainAxisSize: MainAxisSize.min,
                             children: List.generate(5, (index) {
                               return Icon(
-                                index < rating.floor()
+                                index < product.rating.floor()
                                     ? Icons.star
                                     : Icons.star_outline,
                                 size: 10,
@@ -456,7 +450,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           const SizedBox(width: 2),
                           Flexible(
                             child: Text(
-                              '$rating (${reviews.toString().length > 4 ? "${(reviews / 1000).toStringAsFixed(1)}k" : reviews})',
+                              '${product.rating} (${product.reviewCount.toString().length > 4 ? "${(product.reviewCount / 1000).toStringAsFixed(1)}k" : product.reviewCount})',
                               style: GoogleFonts.inter(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w400,

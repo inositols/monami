@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monami/src/features/cart/view/cart_view.dart';
-
+import 'package:monami/src/presentation/views/cart/cart_view.dart';
+import 'package:monami/src/presentation/views/favorites/favorites_view.dart';
 import 'package:monami/src/presentation/views/home/home_view.dart';
 import 'package:monami/src/presentation/views/profile/profile_view.dart';
 
@@ -16,7 +16,8 @@ class NavigatorItem {
 List<NavigatorItem> navigatorItems = [
   NavigatorItem("Shop", "assets/icons/shop_icon.svg", 0, const HomeView()),
   NavigatorItem("Cart", "assets/icons/cart_icon.svg", 2, const CartView()),
-  NavigatorItem("Favourite", "assets/icons/favourite_icon.svg", 3, Container()),
+  NavigatorItem(
+      "Favourite", "assets/icons/favourite_icon.svg", 3, const FavoritesView()),
   NavigatorItem(
       "Account", "assets/icons/account_icon.svg", 4, const ProfileView()),
 ];

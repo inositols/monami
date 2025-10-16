@@ -51,7 +51,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
         postController.removeListener(listener);
       };
     }, [postController]);
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
@@ -91,29 +91,33 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                           return;
                         }
                         final message = postController.text;
-                        final isUploaded =
-                            await ref.read(imageUploaderProvider.notifier).upload(
-                                  file: widget.fileToPost,
-                                  fileType: widget.fileType,
-                                  message: message,
-                                  postSettings: postSettings,
-                                  userId: userId,
-                                  category: selectedItem,
-                                );
+                        final isUploaded = await ref
+                            .read(imageUploaderProvider.notifier)
+                            .upload(
+                              file: widget.fileToPost,
+                              fileType: widget.fileType,
+                              message: message,
+                              postSettings: postSettings,
+                              userId: userId,
+                              category: selectedItem,
+                            );
                         if (isUploaded && mounted) {
                           Navigator.of(context).pop();
                         }
                       }
                     : null,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.send,
                         size: 18,
-                        color: isPostButtonEnabled.value ? Colors.white : Colors.grey.shade600,
+                        color: isPostButtonEnabled.value
+                            ? Colors.white
+                            : Colors.grey.shade600,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -121,7 +125,9 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: isPostButtonEnabled.value ? Colors.white : Colors.grey.shade600,
+                          color: isPostButtonEnabled.value
+                              ? Colors.white
+                              : Colors.grey.shade600,
                         ),
                       ),
                     ],
@@ -157,7 +163,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ),
               ),
             ),
-            
+
             // Caption Input
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -207,7 +213,8 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF667EEA)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF667EEA)),
                         ),
                         filled: true,
                         fillColor: const Color(0xFFF8F9FA),
@@ -221,9 +228,9 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Category Selection
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -267,11 +274,13 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                               selectedItem = newValue!;
                             });
                           },
-                          items: dropdownItems.map<DropdownMenuItem<String>>((value) {
+                          items: dropdownItems
+                              .map<DropdownMenuItem<String>>((value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
                                 child: Text(
                                   value,
                                   style: GoogleFonts.inter(
@@ -282,7 +291,8 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                               ),
                             );
                           }).toList(),
-                          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF718096)),
+                          icon: const Icon(Icons.keyboard_arrow_down,
+                              color: Color(0xFF718096)),
                         ),
                       ),
                     ),
@@ -290,9 +300,9 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Post Settings
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -323,7 +333,8 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                   ),
                   ...PostSetting.values.map(
                     (postSetting) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 4),
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(vertical: 4),
                         title: Text(
@@ -359,7 +370,7 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 40),
           ],
         ),

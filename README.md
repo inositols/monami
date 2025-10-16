@@ -1,68 +1,206 @@
-# Monami: Your E-commerce Flutter App
+# Monami - E-commerce Flutter Application
 
-Monami is a versatile e-commerce mobile/web application built with Flutter. This project serves as an exploration of essential concepts that every Flutter developer should understand when building large, robust, and scalable flutter applications.
+<div align="center">
+  <img src="assets/images/logo.jpg" alt="Monami Logo" width="200"/>
+  
+  [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
+  [![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
+  [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+</div>
 
-## Key Concepts Explored
+## 📱 Overview
 
-- User Authentication: Secure user registration and authentication powered by Firebase Authentication.
-- State Management: Efficient state management using Riverpod, ensuring smooth user interactions and data synchronization
-- Responsive Design: A responsive UI design that adapts seamlessly to various screen sizes, providing an optimal viewing experience across devices.
-- Payment Integration: Seamless integration of Paystack payment gateway for secure and convenient transactions.
-- Location Services: Integration of Google Maps API for location-based features such as store locator and order tracking.
-- Optimized Performance: Implementation of tree shaking techniques to eliminate unused code and optimize app performance.
+Monami is a comprehensive e-commerce mobile application built with Flutter, showcasing modern development practices and scalable architecture patterns. The app provides a complete shopping experience with social features, user authentication, and robust state management.
 
-## Features
+## ✨ Key Features
 
-- [x] The Splash Screen
-- [x] The Onboarding screens
-- [x] Authentication screen
-- [x] HomeScreen
-- [x] Cart screen
-- [x] Favourite screen
-- [x] Account screen
-- Order Screen
-- Payment screen
-- Track your order
+### 🔐 Authentication & User Management
+- Secure user registration and login
+- Firebase Authentication integration
+- User profile management
+- Secure data storage with Flutter Secure Storage
 
-### Screenshots
+### 🛍️ E-commerce Functionality
+- **Product Catalog**: Browse products with detailed views
+- **Shopping Cart**: Add/remove items with quantity management
+- **Favorites**: Save products for later
+- **Order Management**: Complete order lifecycle
+- **Search & Filter**: Find products quickly
 
-<img src="screens/onb.png" width="250"><img src="screens/login.png" width="250">
+### 🎨 User Experience
+- **Responsive Design**: Adapts to various screen sizes
+- **Custom Animations**: Smooth Lottie animations
+- **Custom Paints**: Beautiful UI components
+- **Dark/Light Theme**: Theme customization support
 
-### Application structure
+### 📱 Social Features
+- **Posts**: Create and share content
+- **Comments**: Engage with community
+- **Likes**: Express appreciation
+- **Media Support**: Image and video uploads
 
-After successful build, your application structure should look like this:
+## 🏗️ Architecture
+
+The project follows **Clean Architecture** principles with clear separation of concerns:
 
 ```
-.
-├── android                         - It contains files required to run the application on an Android platform.
-├── assets                          - It contains all images and fonts of your application.
-├── ios                             - It contains files required to run the application on an iOS platform.
-├── lib                             - Most important folder in the application, used to write most of the Dart code..
-    ├── main.dart                   - Starting point of the application
-    ├── core
-    │   ├── app_export.dart         - It contains commonly used file imports
-    │   ├── constants               - It contains static constant class file
-    │   └── utils                   - It contains common files and utilities of the application
-    ├── presentation                - It contains widgets of the screens
-    ├── routes                      - It contains all the routes of the application
-    └── theme                       - It contains app theme and decoration classes
-    └── widgets                     - It contains all custom widget classes
+lib/
+├── src/
+│   ├── data/           # Data layer (local & remote)
+│   ├── features/       # Feature-specific logic
+│   ├── presentation/   # UI layer (views, widgets)
+│   ├── services/       # Business logic services
+│   └── utils/          # Utilities and constants
+├── main.dart           # Application entry point
+└── app.dart           # App configuration
 ```
 
-### How to format your code?
+## 🛠️ Tech Stack
 
-- if your code is not formatted then run following command in your terminal to format code
-  ```
-  dart format .
-  ```
+### Core Technologies
+- **Flutter** - Cross-platform UI framework
+- **Dart** - Programming language
+- **Riverpod** - State management
+- **Firebase** - Backend services
 
-### How you can improve code readability?
+### Key Dependencies
+- `firebase_core` - Firebase initialization
+- `firebase_auth` - User authentication
+- `cloud_firestore` - NoSQL database
+- `firebase_storage` - File storage
+- `flutter_riverpod` - State management
+- `flutter_hooks` - React-like hooks
+- `device_preview` - Multi-device testing
+- `lottie` - Animations
+- `image_picker` - Media selection
+- `video_player` - Video playback
 
-Resolve the errors and warnings that are shown in the application.
+## 🚀 Getting Started
 
-### Libraries and tools used
+### Prerequisites
+- Flutter SDK (>=3.0.3)
+- Dart SDK
+- Firebase project setup
+- Android Studio / VS Code
+- Git
 
-- Riverpod - State management
-  https://riverpod.dev/docs/getting_started
-- cached_network_image - For storing internet image into cache
-  https://pub.dev/packages/cached_network_image
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/monami.git
+   cd monami
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Firebase Setup**
+   - Create a Firebase project
+   - Enable Authentication, Firestore, and Storage
+   - Download `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+   - Place them in the respective platform folders
+
+4. **Run the application**
+   ```bash
+   flutter run
+   ```
+
+### Demo Credentials
+For testing purposes, use these credentials:
+- **Email**: demo@monami.com
+- **Password**: demo123
+
+## 📱 Screenshots
+
+<div align="center">
+  <img src="screens/onb.png" alt="Onboarding" width="200"/>
+  <img src="screens/login.png" alt="Login" width="200"/>
+</div>
+
+## 🧪 Testing
+
+### Code Formatting
+```bash
+dart format .
+```
+
+### Linting
+```bash
+flutter analyze
+```
+
+### Running Tests
+```bash
+flutter test
+```
+
+## 📦 Build & Deployment
+
+### Android
+```bash
+flutter build apk --release
+```
+
+### iOS
+```bash
+flutter build ios --release
+```
+
+### Web
+```bash
+flutter build web --release
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Code Style Guidelines
+- Follow Dart/Flutter conventions
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Write unit tests for new features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- Email: your.email@example.com
+
+## 🙏 Acknowledgments
+
+- Flutter team for the amazing framework
+- Firebase for backend services
+- Riverpod team for state management
+- Open source community for inspiration
+
+## 📈 Roadmap
+
+- [ ] Payment gateway integration
+- [ ] Push notifications
+- [ ] Offline support
+- [ ] Advanced analytics
+- [ ] Multi-language support
+- [ ] Admin dashboard
+
+---
+
+<div align="center">
+  <p>Made with ❤️ using Flutter</p>
+  <p>⭐ Star this repository if you found it helpful!</p>
+</div>

@@ -69,7 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '287710446077',
     projectId: 'awesome-monami',
     storageBucket: 'awesome-monami.appspot.com',
-    iosClientId: '287710446077-2q1nqhtuq746ak40gdsbbvk8r5obhjcv.apps.googleusercontent.com',
+    iosClientId:
+        '287710446077-2q1nqhtuq746ak40gdsbbvk8r5obhjcv.apps.googleusercontent.com',
     iosBundleId: 'com.example.monami',
   );
 }

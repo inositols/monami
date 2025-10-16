@@ -10,29 +10,29 @@ environment:
 
 dependencies:
   animated_text_kit: ^4.2.2
-  cloud_firestore: null
-  collection: null
+  cloud_firestore: ^4.13.6
+  collection: ^1.17.2
   cupertino_icons: ^1.0.2
-  device_preview: null
+  device_preview: 1.3.1
   equatable: ^2.0.5
-  firebase_auth: null
-  firebase_core: null
-  firebase_storage: null
+  firebase_auth: ^4.15.3
+  firebase_core: ^2.24.2
+  firebase_storage: ^11.5.6
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
   flutter_riverpod: ^2.5.1
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: ^8.0.0
   flutter_svg: ^2.0.9
-  font_awesome_flutter: null
+  font_awesome_flutter: ^10.5.0
   gap: ^3.0.1
   get_it: ^7.6.0
   google_fonts: ^5.1.0
-  google_sign_in: null
+  google_sign_in: ^6.1.6
   hooks_riverpod: ^2.3.0
-  image: null
-  # image_picker: null
-  intl: null
+  image: ^4.0.17
+  image_picker: ^1.0.7
+  intl: ^0.20.2
   lottie: ^2.2.0
   share_plus: ^7.0.2
   shared_preferences: ^2.2.2
@@ -44,6 +44,11 @@ dependencies:
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.13.1
+
+# dependency_overrides:
+#   win32: ^3.1.4
+#   ffi: ^2.0.2
+#   flutter_secure_storage_windows: ^2.0.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
