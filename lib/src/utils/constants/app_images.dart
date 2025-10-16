@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+
+@immutable
 class AppImage {
   static const nina = "assets/images/nina.png";
   static const pulse = "assets/images/pulses.png";
@@ -26,4 +29,7 @@ class AppImage {
   static const dis = "assets/images/dis.jpg";
   static const dis2 = "assets/images/dis1.jpg";
   static const lady = "assets/images/lady.png";
+  static const monamiLogo = AssetImage("assets/images/log.jpg");
+  static const appIcon = AssetImage("assets/images/app_icon.jpg");
+  const AppImage._();
 }

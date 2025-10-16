@@ -12,26 +12,30 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final List<Color>? gradient;
   final BorderSide? borderSide;
-  final AlignmentGeometry textAlign;
+  final AlignmentGeometry childAlign;
+  final TextAlign textAlign;
   final double? radius;
   final bool isLoading;
+  final List<BoxShadow>? boxShadow;
 
-  const CustomButton(
-      {Key? key,
-      this.onPressed,
-      this.textColor,
-      this.text,
-      this.color,
-      this.child,
-      this.width = double.infinity,
-      this.height,
-      this.gradient = const [Colors.transparent, Colors.transparent],
-      this.borderSide,
-      this.radius = 50,
-      this.isLoading = false,
-      this.textSize,
-      this.textAlign = Alignment.center})
-      : super(key: key);
+  const CustomButton({
+    Key? key,
+    this.onPressed,
+    this.textColor,
+    this.text,
+    this.color,
+    this.child,
+    this.width = double.infinity,
+    this.height,
+    this.gradient = const [Colors.transparent, Colors.transparent],
+    this.borderSide,
+    this.radius = 50,
+    this.isLoading = false,
+    this.textSize,
+    this.childAlign = Alignment.center,
+    this.textAlign = TextAlign.center,
+    this.boxShadow,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +47,19 @@ class CustomButton extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 650),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(radius!),
-              gradient: LinearGradient(colors: gradient!)),
+            borderRadius: BorderRadius.circular(radius!),
+            gradient: LinearGradient(
+                colors:
+                    gradient ?? const [Color(0xFF667EEA), Color(0xFF764BA2)]),
+            boxShadow: boxShadow ??
+                [
+                  BoxShadow(
+                    color: const Color(0xFF667EEA).withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+          ),
           child: MaterialButton(
             elevation: 0,
             highlightElevation: 0,
@@ -55,12 +70,16 @@ class CustomButton extends StatelessWidget {
                 borderSide: borderSide ?? BorderSide.none),
             child: child ??
                 Align(
-                  alignment: textAlign,
-                  child: Text(text!,
-                      style: GoogleFonts.inter(
-                          color: textColor,
-                          fontSize: textSize ?? 16,
-                          fontWeight: FontWeight.w600)),
+                  alignment: childAlign,
+                  child: Text(
+                    text!,
+                    style: GoogleFonts.inter(
+                      color: textColor,
+                      fontSize: textSize ?? 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: textAlign,
+                  ),
                 ),
           ),
         ),

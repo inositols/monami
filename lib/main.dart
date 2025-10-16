@@ -11,19 +11,14 @@ import 'package:device_preview/device_preview.dart' show DevicePreview;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await setupLocator();
   await StorageService.init();
   await _initializeSampleData();
 
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => const App(),
-    ),
+    DevicePreview(builder: (context) => const App()),
   );
 }
 
@@ -44,7 +39,7 @@ Future<void> _initializeSampleData() async {
       category: 'Electronics',
       images: [
         'assets/images/headphone_6.png',
-        'assets/images/headphone_7.png'
+        'assets/images/headphone_7.png',
       ],
       colors: ['Black', 'White', 'Silver'],
       sizes: ['Standard'],

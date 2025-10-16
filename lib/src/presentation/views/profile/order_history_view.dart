@@ -56,7 +56,8 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
   Future<void> _loadOrders() async {
     try {
       final ordersData = await StorageService.getOrders();
-      orders = ordersData.map((orderData) => Order.fromJson(orderData)).toList();
+      orders =
+          ordersData.map((orderData) => Order.fromJson(orderData)).toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -71,6 +72,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
+        top: false,
         child: AnimatedBuilder(
           animation: _fadeAnimation,
           builder: (context, child) {
@@ -97,7 +99,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -312,7 +314,8 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(order.status).withOpacity(0.1),
+                            color:
+                                _getStatusColor(order.status).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -349,7 +352,8 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(order.status).withOpacity(0.1),
+                            color:
+                                _getStatusColor(order.status).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -367,58 +371,63 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
                     const SizedBox(height: 16),
 
                     // Order Items
-                    ...order.items.take(2).map((item) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8FAFC),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: const Color(0xFFE2E8F0)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(7),
-                              child: Image.asset(
-                                item.image,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey.shade200,
-                                    child: Icon(
-                                      Icons.image_outlined,
-                                      color: Colors.grey.shade400,
-                                      size: 20,
+                    ...order.items
+                        .take(2)
+                        .map((item) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF8FAFC),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: const Color(0xFFE2E8F0)),
                                     ),
-                                  );
-                                },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(7),
+                                      child: Image.asset(
+                                        item.image,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.grey.shade200,
+                                            child: Icon(
+                                              Icons.image_outlined,
+                                              color: Colors.grey.shade400,
+                                              size: 20,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      '${item.productName} x${item.quantity}',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: const Color(0xFF4A5568),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '\$${item.totalPrice.toStringAsFixed(2)}',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF1A202C),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              '${item.productName} x${item.quantity}',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF4A5568),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '\$${item.totalPrice.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF1A202C),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )).toList(),
+                            ))
+                        .toList(),
 
                     if (order.items.length > 2) ...[
                       Text(
