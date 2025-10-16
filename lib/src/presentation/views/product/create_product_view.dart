@@ -45,12 +45,27 @@ class _CreateProductViewState extends State<CreateProductView>
   ];
 
   final List<String> _availableColors = [
-    'Black', 'White', 'Red', 'Blue', 'Green', 
-    'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Gray'
+    'Black',
+    'White',
+    'Red',
+    'Blue',
+    'Green',
+    'Yellow',
+    'Orange',
+    'Purple',
+    'Pink',
+    'Brown',
+    'Gray'
   ];
 
   final List<String> _availableSizes = [
-    'XS', 'S', 'M', 'L', 'XL', 'XXL', 'One Size'
+    'XS',
+    'S',
+    'M',
+    'L',
+    'XL',
+    'XXL',
+    'One Size'
   ];
 
   final List<String> _sampleImages = [
@@ -345,7 +360,7 @@ class _CreateProductViewState extends State<CreateProductView>
           itemBuilder: (context, index) {
             final image = _sampleImages[index];
             final isSelected = _productImages.contains(image);
-            
+
             return GestureDetector(
               onTap: () {
                 setState(() {
@@ -359,7 +374,9 @@ class _CreateProductViewState extends State<CreateProductView>
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE2E8F0),
+                    color: isSelected
+                        ? const Color(0xFF667EEA)
+                        : const Color(0xFFE2E8F0),
                     width: isSelected ? 3 : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -461,14 +478,16 @@ class _CreateProductViewState extends State<CreateProductView>
               labelStyle: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: isSelected ? const Color(0xFF667EEA) : const Color(0xFF4A5568),
+                color: isSelected
+                    ? const Color(0xFF667EEA)
+                    : const Color(0xFF4A5568),
               ),
             );
           }).toList(),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Sizes
         Text(
           'Available Sizes',
@@ -502,7 +521,9 @@ class _CreateProductViewState extends State<CreateProductView>
               labelStyle: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: isSelected ? const Color(0xFF667EEA) : const Color(0xFF4A5568),
+                color: isSelected
+                    ? const Color(0xFF667EEA)
+                    : const Color(0xFF4A5568),
               ),
             );
           }).toList(),
@@ -714,7 +735,8 @@ class _CreateProductViewState extends State<CreateProductView>
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -808,7 +830,7 @@ class _CreateProductViewState extends State<CreateProductView>
             backgroundColor: Colors.green.shade400,
           ),
         );
-        
+
         Navigator.pop(context, true); // Return true to indicate success
       }
     } catch (e) {

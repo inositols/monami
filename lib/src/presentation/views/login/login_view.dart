@@ -5,10 +5,7 @@ import 'package:monami/src/presentation/views/login/login_view_model.dart';
 import 'package:monami/src/presentation/widgets/button_loader.dart';
 import 'package:monami/src/presentation/widgets/custom_button.dart';
 import 'package:monami/src/presentation/widgets/custom_textfield.dart';
-
 import 'package:monami/src/shared/monami_logo.dart';
-import 'package:monami/src/utils/constants/app_colors.dart';
-
 import 'component/custom_paint.dart';
 
 enum Status {
@@ -159,7 +156,7 @@ class _LoginViewState extends State<LoginView> {
                             width: double.infinity,
                             decoration: const BoxDecoration(),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              spacing: 10,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CustomButton(
@@ -180,7 +177,6 @@ class _LoginViewState extends State<LoginView> {
                                         : 'Sign up',
                                   ),
                                 ),
-                                const Spacer(),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 24.0),
                                   child: RichText(

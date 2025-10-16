@@ -270,7 +270,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     : SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         sliver: SliverGrid(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.75,
                             crossAxisSpacing: 16,
@@ -308,7 +309,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ProductDetailView(
-              image: product.images.isNotEmpty ? product.images.first : 'assets/images/bag_1.png',
+              image: product.images.isNotEmpty
+                  ? product.images.first
+                  : 'assets/images/bag_1.png',
               title: product.name,
               subtitle: product.description,
               price: '\$${product.price.toStringAsFixed(2)}',
@@ -368,7 +371,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     topRight: Radius.circular(12),
                   ),
                   child: Image.asset(
-                    product.images.isNotEmpty ? product.images.first : 'assets/images/bag_1.png',
+                    product.images.isNotEmpty
+                        ? product.images.first
+                        : 'assets/images/bag_1.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(

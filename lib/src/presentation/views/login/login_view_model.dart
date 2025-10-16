@@ -15,7 +15,7 @@ class LoginViewModel extends BaseViewModel {
   }) async {
     try {
       toggleLoading(true);
-      
+
       // Demo credentials for testing
       if (email == 'demo@monami.com' && password == 'demo123') {
         await _saveTestUserProfile();
@@ -23,7 +23,7 @@ class LoginViewModel extends BaseViewModel {
         navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
         return;
       }
-      
+
       await authService.login(email: email, password: password);
       toggleLoading(false);
       navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
@@ -37,7 +37,7 @@ class LoginViewModel extends BaseViewModel {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       const String userProfileKey = 'user_profile';
-      
+
       final userProfile = {
         'id': 'demo_user_123',
         'name': 'Demo User',
@@ -47,7 +47,7 @@ class LoginViewModel extends BaseViewModel {
         'role': 'user',
         'lastLogin': DateTime.now().toIso8601String(),
       };
-      
+
       await prefs.setString(userProfileKey, jsonEncode(userProfile));
       await prefs.setBool('loginStatus', true);
     } catch (e) {

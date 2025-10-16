@@ -44,10 +44,10 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: null,
       backgroundColor: const Color(0xFFF8F9FA),
       body: CustomScrollView(
         slivers: [
-          // Profile Header
           SliverAppBar(
             expandedHeight: 320,
             floating: false,

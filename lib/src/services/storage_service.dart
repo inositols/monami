@@ -16,7 +16,8 @@ class StorageService {
 
   static SharedPreferences get prefs {
     if (_prefs == null) {
-      throw Exception('StorageService not initialized. Call StorageService.init() first.');
+      throw Exception(
+          'StorageService not initialized. Call StorageService.init() first.');
     }
     return _prefs!;
   }
@@ -26,7 +27,7 @@ class StorageService {
     await init();
     final String? productsJson = prefs.getString(_productsKey);
     if (productsJson == null) return [];
-    
+
     final List<dynamic> productsList = jsonDecode(productsJson);
     return productsList.cast<Map<String, dynamic>>();
   }
@@ -34,12 +35,12 @@ class StorageService {
   static Future<void> saveProduct(Map<String, dynamic> product) async {
     await init();
     final products = await getProducts();
-    
+
     // Generate ID if not provided
     if (product['id'] == null) {
       product['id'] = DateTime.now().millisecondsSinceEpoch.toString();
     }
-    
+
     products.add(product);
     await prefs.setString(_productsKey, jsonEncode(products));
   }
@@ -48,7 +49,7 @@ class StorageService {
     await init();
     final products = await getProducts();
     final index = products.indexWhere((p) => p['id'] == updatedProduct['id']);
-    
+
     if (index != -1) {
       products[index] = updatedProduct;
       await prefs.setString(_productsKey, jsonEncode(products));
@@ -94,7 +95,7 @@ class StorageService {
     await init();
     final String? cartJson = prefs.getString(_cartKey);
     if (cartJson == null) return [];
-    
+
     final List<dynamic> cartList = jsonDecode(cartJson);
     return cartList.cast<Map<String, dynamic>>();
   }
@@ -102,12 +103,11 @@ class StorageService {
   static Future<void> addToCart(Map<String, dynamic> cartItem) async {
     await init();
     final cartItems = await getCartItems();
-    
+
     // Check if item already exists
-    final existingIndex = cartItems.indexWhere(
-      (item) => item['productId'] == cartItem['productId']
-    );
-    
+    final existingIndex = cartItems
+        .indexWhere((item) => item['productId'] == cartItem['productId']);
+
     if (existingIndex != -1) {
       // Update quantity
       cartItems[existingIndex]['quantity'] = cartItem['quantity'];
@@ -115,7 +115,7 @@ class StorageService {
       // Add new item
       cartItems.add(cartItem);
     }
-    
+
     await prefs.setString(_cartKey, jsonEncode(cartItems));
   }
 
@@ -126,11 +126,13 @@ class StorageService {
     await prefs.setString(_cartKey, jsonEncode(cartItems));
   }
 
-  static Future<void> updateCartItemQuantity(String productId, int quantity) async {
+  static Future<void> updateCartItemQuantity(
+      String productId, int quantity) async {
     await init();
     final cartItems = await getCartItems();
-    final index = cartItems.indexWhere((item) => item['productId'] == productId);
-    
+    final index =
+        cartItems.indexWhere((item) => item['productId'] == productId);
+
     if (index != -1) {
       if (quantity <= 0) {
         cartItems.removeAt(index);
@@ -151,7 +153,7 @@ class StorageService {
     await init();
     final String? ordersJson = prefs.getString(_ordersKey);
     if (ordersJson == null) return [];
-    
+
     final List<dynamic> ordersList = jsonDecode(ordersJson);
     return ordersList.cast<Map<String, dynamic>>();
   }
@@ -159,15 +161,15 @@ class StorageService {
   static Future<void> saveOrder(Map<String, dynamic> order) async {
     await init();
     final orders = await getOrders();
-    
+
     // Generate order ID if not provided
     if (order['id'] == null) {
       order['id'] = 'ORD${DateTime.now().millisecondsSinceEpoch}';
     }
-    
+
     // Add timestamp
     order['createdAt'] = DateTime.now().toIso8601String();
-    
+
     orders.insert(0, order); // Add to beginning for recent first
     await prefs.setString(_ordersKey, jsonEncode(orders));
   }
@@ -177,7 +179,7 @@ class StorageService {
     await init();
     final String? profileJson = prefs.getString(_userProfileKey);
     if (profileJson == null) return null;
-    
+
     return jsonDecode(profileJson);
   }
 
@@ -201,7 +203,7 @@ class StorageService {
       'orders': await getOrders(),
       'profile': await getUserProfile(),
     };
-    
+
     // In a real app, you might want to save this to a file or send to a server
     print('Exported data: ${jsonEncode(data)}');
   }
