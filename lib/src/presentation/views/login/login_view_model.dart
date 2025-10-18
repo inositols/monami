@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monami/src/presentation/views/view_models/base_model.dart';
 import 'package:monami/src/utils/router/route_name.dart';
+import 'package:monami/src/data/remote/auth_debug_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final loginViewModelProvider = ChangeNotifierProvider((_) {
@@ -24,6 +25,9 @@ class LoginViewModel extends BaseViewModel {
         return;
       }
 
+      // Debug login process
+      await AuthDebugHelper.debugLogin(email, password);
+      
       await authService.login(email: email, password: password);
       toggleLoading(false);
       navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
@@ -35,9 +39,6 @@ class LoginViewModel extends BaseViewModel {
 
   Future<void> _saveTestUserProfile() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      const String userProfileKey = 'user_profile';
-
       final userProfile = {
         'id': 'demo_user_123',
         'name': 'Demo User',
@@ -48,10 +49,12 @@ class LoginViewModel extends BaseViewModel {
         'lastLogin': DateTime.now().toIso8601String(),
       };
 
-      await prefs.setString(userProfileKey, jsonEncode(userProfile));
-      await prefs.setBool('loginStatus', true);
+      // Use LocalCache for better data persistence
+      await localCache.saveUserProfile(userProfile);
+      await localCache.persistLoginStatus(true);
     } catch (e) {
       print('Error saving test user profile: $e');
+      showErrorSnackBar('Error saving user profile');
     }
   }
 

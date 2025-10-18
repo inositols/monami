@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/remote/product_service.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -804,8 +808,10 @@ class _CreateProductViewState extends State<CreateProductView>
     });
 
     try {
+      // Create product with unique ID
+      final productId = DateTime.now().millisecondsSinceEpoch.toString();
       final product = Product(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: productId,
         name: _nameController.text,
         description: _descriptionController.text,
         price: double.parse(_priceController.text),
@@ -815,10 +821,13 @@ class _CreateProductViewState extends State<CreateProductView>
         sizes: _selectedSizes,
         stockQuantity: int.parse(_stockController.text),
         createdAt: DateTime.now(),
+        createdBy: FirebaseAuth.instance.currentUser?.uid ?? 'anonymous',
         brand: _brandController.text.isNotEmpty ? _brandController.text : null,
       );
 
-      await StorageService.saveProduct(product.toJson());
+      // Use ProductService to create product (handles both Firebase and local storage)
+      final productService = ProductService();
+      await productService.createProduct(product);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -834,11 +843,12 @@ class _CreateProductViewState extends State<CreateProductView>
         Navigator.pop(context, true); // Return true to indicate success
       }
     } catch (e) {
+      print('Error creating product: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Error creating product: $e',
+              'Error creating product: ${e.toString()}',
               style: GoogleFonts.inter(fontWeight: FontWeight.w500),
             ),
             backgroundColor: Colors.red.shade400,
@@ -853,4 +863,5 @@ class _CreateProductViewState extends State<CreateProductView>
       }
     }
   }
+
 }

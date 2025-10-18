@@ -12,6 +12,7 @@ class Product {
   final double rating;
   final int reviewCount;
   final DateTime createdAt;
+  final String createdBy;
   final String? brand;
   final Map<String, dynamic>? specifications;
 
@@ -29,6 +30,7 @@ class Product {
     this.rating = 0.0,
     this.reviewCount = 0,
     required this.createdAt,
+    required this.createdBy,
     this.brand,
     this.specifications,
   });
@@ -48,6 +50,7 @@ class Product {
       'rating': rating,
       'reviewCount': reviewCount,
       'createdAt': createdAt.toIso8601String(),
+      'createdBy': createdBy,
       'brand': brand,
       'specifications': specifications,
     };
@@ -68,6 +71,7 @@ class Product {
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
+      createdBy: json['createdBy'] ?? '',
       brand: json['brand'],
       specifications: json['specifications'],
     );
@@ -87,6 +91,7 @@ class Product {
     double? rating,
     int? reviewCount,
     DateTime? createdAt,
+    String? createdBy,
     String? brand,
     Map<String, dynamic>? specifications,
   }) {
@@ -104,6 +109,7 @@ class Product {
       rating: rating ?? this.rating,
       reviewCount: reviewCount ?? this.reviewCount,
       createdAt: createdAt ?? this.createdAt,
+      createdBy: createdBy ?? this.createdBy,
       brand: brand ?? this.brand,
       specifications: specifications ?? this.specifications,
     );
@@ -160,7 +166,7 @@ class CartItem {
   double get totalPrice => price * quantity;
 }
 
-class Order {
+class Orders {
   final String id;
   final List<CartItem> items;
   final double subtotal;
@@ -172,7 +178,7 @@ class Order {
   final Map<String, dynamic> shippingAddress;
   final String paymentMethod;
 
-  Order({
+  Orders({
     required this.id,
     required this.items,
     required this.subtotal,
@@ -200,8 +206,8 @@ class Order {
     };
   }
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
+  factory Orders.fromJson(Map<String, dynamic> json) {
+    return Orders(
       id: json['id'],
       items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))

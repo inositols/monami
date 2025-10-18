@@ -26,6 +26,9 @@ abstract class AuthService {
 // get a user by [userId]
   Future<UserInfoModel?> getUser(String userId);
 
+  // get current authenticated user
+  Future<UserInfoModel?> getCurrentUser();
+
   //subscribe to list of users
   Stream<List<UserInfoModel>> getUsers();
 }
