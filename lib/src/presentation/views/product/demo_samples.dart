@@ -25,6 +25,7 @@ Future<void> initializeSampleData() async {
       rating: 4.8,
       reviewCount: 127,
       createdAt: DateTime.now(),
+      createdBy: 'demo_user_1',
       brand: 'AudioTech',
     ),
     Product(
@@ -41,6 +42,7 @@ Future<void> initializeSampleData() async {
       rating: 4.9,
       reviewCount: 89,
       createdAt: DateTime.now(),
+      createdBy: 'demo_user_2',
       brand: 'LuxeBags',
     ),
     Product(
@@ -57,6 +59,7 @@ Future<void> initializeSampleData() async {
       rating: 4.7,
       reviewCount: 34,
       createdAt: DateTime.now(),
+      createdBy: 'demo_user_3',
       brand: 'Jewelry Co',
     ),
     Product(
@@ -73,6 +76,7 @@ Future<void> initializeSampleData() async {
       rating: 4.6,
       reviewCount: 156,
       createdAt: DateTime.now(),
+      createdBy: 'demo_user_4',
       brand: 'CapStyle',
     ),
     Product(
@@ -89,6 +93,7 @@ Future<void> initializeSampleData() async {
       rating: 4.5,
       reviewCount: 78,
       createdAt: DateTime.now(),
+      createdBy: 'demo_user_5',
       brand: 'GameSound',
     ),
   ];

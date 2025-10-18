@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/src/presentation/views/favorites/widget/empty.dart';
 import 'package:monami/src/presentation/views/favorites/widget/header.dart';
+import 'package:monami/src/data/remote/favorites_service.dart';
+import 'package:monami/src/data/remote/product_service.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -51,15 +53,30 @@ class _FavoritesViewState extends State<FavoritesView>
 
   Future<void> _loadFavorites() async {
     try {
-      final favoriteIds = await StorageService.getFavorites();
-      final allProducts = await StorageService.getProducts();
+      final favoritesService = FavoritesService();
+      final productService = ProductService();
+      
+      // Get favorite IDs from FavoritesService (Firebase + local)
+      final favoriteIds = await favoritesService.getFavorites();
+      
+      // Get products from Firebase first, then fallback to local
+      List<Product> allProducts = [];
+      try {
+        allProducts = await productService.getProductsFromFirebase();
+      } catch (firebaseError) {
+        print('Firebase error, loading from local storage: $firebaseError');
+        // Fallback to local storage
+        final productsData = await StorageService.getProducts();
+        allProducts = productsData.map((data) => Product.fromJson(data)).toList();
+      }
 
+      // Filter products that are in favorites
       favoriteProducts = allProducts
-          .map((productData) => Product.fromJson(productData))
           .where((product) => favoriteIds.contains(product.id))
           .toList();
     } catch (e) {
-      // Handle error
+      print('Error loading favorites: $e');
+      // Handle error - favorites list will remain empty
     } finally {
       setState(() {
         isLoading = false;
@@ -290,26 +307,43 @@ class _FavoritesViewState extends State<FavoritesView>
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            await StorageService.removeFromFavorites(
-                                product.id);
-                            await _loadFavorites(); // Reload favorites
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Removed from favorites',
-                                    style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w500,
+                            try {
+                              final favoritesService = FavoritesService();
+                              await favoritesService.removeFromFavorites(product.id);
+                              await _loadFavorites(); // Reload favorites
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Removed from favorites',
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
+                                    backgroundColor: Colors.red.shade400,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    duration: const Duration(seconds: 2),
                                   ),
-                                  backgroundColor: Colors.red.shade400,
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                );
+                              }
+                            } catch (e) {
+                              print('Error removing from favorites: $e');
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Error removing from favorites',
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.red.shade400,
                                   ),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
+                                );
+                              }
                             }
                           },
                           child: Container(

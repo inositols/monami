@@ -16,7 +16,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  List<Order> orders = [];
+  List<Orders> orders = [];
   bool isLoading = true;
 
   @override
@@ -57,7 +57,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
     try {
       final ordersData = await StorageService.getOrders();
       orders =
-          ordersData.map((orderData) => Order.fromJson(orderData)).toList();
+          ordersData.map((orderData) => Orders.fromJson(orderData)).toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -276,7 +276,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
     );
   }
 
-  Widget _buildOrderCard(Order order, int index) {
+  Widget _buildOrderCard(Orders order, int index) {
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -583,7 +583,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
     return '${date.day}/${date.month}/${date.year} at ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 
-  void _showOrderDetails(Order order) {
+  void _showOrderDetails(Orders order) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -675,7 +675,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView>
     );
   }
 
-  void _reorderItems(Order order) {
+  void _reorderItems(Orders order) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

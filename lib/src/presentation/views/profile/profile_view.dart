@@ -1,10 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:monami/src/data/remote/notification_service.dart';
 import 'package:monami/src/presentation/views/onboarding/onboarding_view.dart';
+import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
+import 'package:monami/src/handlers/handlers.dart';
+import 'package:monami/src/data/local/local_cache.dart';
+import 'package:monami/src/data/remote/auth_service.dart';
+import 'package:monami/src/utils/router/locator.dart';
+import 'package:monami/src/utils/router/route_name.dart';
 import '../../../services/storage_service.dart';
 import '../favorites/favorites_view.dart';
 import '../product/create_product_view.dart';
+import '../dashboard/user_dashboard_view.dart';
 import 'edit_profile_view.dart';
 import 'order_history_view.dart';
 
@@ -20,6 +31,14 @@ class _ProfileViewState extends State<ProfileView> {
   bool biometricTransaction = true;
   bool notificationsEnabled = true;
   Map<String, dynamic>? userProfile;
+  bool isLoading = true;
+
+  // Service instances
+  late final NavigationService _navigationService =
+      locator<NavigationService>();
+  late final SnackbarHandler _snackbarHandler = locator<SnackbarHandler>();
+  late final LocalCache _localCache = locator<LocalCache>();
+  late final AuthService _authService = locator<AuthService>();
 
   @override
   void initState() {
@@ -29,20 +48,106 @@ class _ProfileViewState extends State<ProfileView> {
 
   Future<void> _loadUserProfile() async {
     try {
-      final profile = await StorageService.getUserProfile();
-      if (mounted) {
-        setState(() {
-          userProfile = profile;
-        });
+      // First try to get user from AuthService
+      final currentUser = await _authService.getCurrentUser();
+      if (currentUser != null) {
+        if (mounted) {
+          setState(() {
+            userProfile = {
+              'id': currentUser.userId,
+              'name': currentUser.displayName ?? 'User',
+              'email': currentUser.email ?? 'user@email.com',
+              'phone': currentUser.phoneNumber ?? '',
+              'status': currentUser.status ?? 'active',
+              'role': currentUser.role ?? 'user',
+              'lastLogin': DateTime.now().toIso8601String(),
+            };
+            isLoading = false;
+          });
+        }
+        return;
+      }
+
+      // Fallback to Firebase Auth user
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
+        print('No Firebase user found');
+        return;
+      }
+
+      // Get user details from Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection(FirebaseCollectionName.users)
+          .where(FirebaseFieldName.userId, isEqualTo: firebaseUser.uid)
+          .get();
+
+      if (userDoc.docs.isNotEmpty) {
+        final userData = userDoc.docs.first.data();
+        if (mounted) {
+          setState(() {
+            userProfile = {
+              'id': userData[FirebaseFieldName.userId],
+              'name': userData[FirebaseFieldName.displayName] ?? 'User',
+              'email': userData[FirebaseFieldName.email] ??
+                  firebaseUser.email ??
+                  'user@email.com',
+              'phone': userData[FirebaseFieldName.phoneNumber] ?? '',
+              'status': userData[FirebaseFieldName.status] ?? 'active',
+              'role': userData[FirebaseFieldName.role] ?? 'user',
+              'lastLogin': DateTime.now().toIso8601String(),
+            };
+            isLoading = false;
+          });
+        }
+      } else {
+        print('User not found in Firestore');
+        // Fallback to Firebase Auth user data
+        if (mounted) {
+          setState(() {
+            userProfile = {
+              'id': firebaseUser.uid,
+              'name': firebaseUser.displayName ?? 'User',
+              'email': firebaseUser.email ?? 'user@email.com',
+              'phone': firebaseUser.phoneNumber ?? '',
+              'status': 'active',
+              'role': 'user',
+              'lastLogin': DateTime.now().toIso8601String(),
+            };
+            isLoading = false;
+          });
+        }
       }
     } catch (e) {
-      // Handle error
-      print('Error loading user profile: $e');
+      print('Error loading user profile from Firebase: $e');
+      // Fallback to local storage
+      try {
+        final profile = await StorageService.getUserProfile();
+        if (mounted) {
+          setState(() {
+            userProfile = profile;
+            isLoading = false;
+          });
+        }
+      } catch (fallbackError) {
+        print('Error loading user profile from local storage: $fallbackError');
+        _snackbarHandler.showErrorSnackbar('Failed to load user profile');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        backgroundColor: Color(0xFFF8F9FA),
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667EEA)),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: null,
       backgroundColor: const Color(0xFFF8F9FA),
@@ -197,15 +302,12 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Edit Personal Info",
                         subtitle: "Update your personal information",
                         onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const EditProfileView(),
-                            ),
+                          final result = await _navigationService.pushNamed(
+                            Routes.editProfileRoute,
                           );
                           // Refresh profile data when returning
                           if (result == true || result == null) {
-                            _loadUserProfile();
+                            await _loadUserProfile();
                           }
                         },
                       ),
@@ -214,12 +316,7 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Wishlist",
                         subtitle: "View your saved items",
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FavoritesView(),
-                            ),
-                          );
+                          _navigationService.pushNamed(Routes.favoritesRoute);
                         },
                       ),
                       _buildModernListTile(
@@ -227,12 +324,17 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Order History",
                         subtitle: "Track your orders",
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OrderHistoryView(),
-                            ),
-                          );
+                          _navigationService
+                              .pushNamed(Routes.orderHistoryRoute);
+                        },
+                      ),
+                      _buildModernListTile(
+                        icon: Icons.dashboard_outlined,
+                        title: "My Dashboard",
+                        subtitle: "View your created products",
+                        onTap: () {
+                          _navigationService
+                              .pushNamed(Routes.userDashboardRoute);
                         },
                       ),
                       _buildModernListTile(
@@ -240,23 +342,12 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Create Product",
                         subtitle: "Add new product to the store",
                         onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CreateProductView(),
-                            ),
+                          final result = await _navigationService.pushNamed(
+                            Routes.createProductRoute,
                           );
                           if (result == true && mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Product created successfully! Check the home screen.',
-                                  style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                backgroundColor: Colors.green.shade400,
-                                duration: const Duration(seconds: 3),
-                              ),
+                            _snackbarHandler.showSnackbar(
+                              'Product created successfully! Check the home screen.',
                             );
                           }
                         },
@@ -275,6 +366,12 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Notifications",
                         subtitle: "Manage your notifications",
                         onTap: _manageNotifications,
+                      ),
+                      _buildModernListTile(
+                        icon: Icons.bug_report,
+                        title: "Test Notification",
+                        subtitle: "Send a test notification",
+                        onTap: _testNotification,
                       ),
                       _buildModernListTile(
                         icon: Icons.help_outline,
@@ -494,44 +591,17 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _showNotifications() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            'Notifications',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A202C),
-            ),
-          ),
-          content: Text(
-            'You have no new notifications.',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              color: const Color(0xFF718096),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'OK',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF667EEA),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    _navigationService.pushNamed(Routes.notificationsRoute);
+  }
+
+  void _testNotification() async {
+    try {
+      final notificationService = NotificationService();
+      await notificationService.sendTestNotification();
+      _snackbarHandler.showSnackbar('Test notification sent!');
+    } catch (e) {
+      _snackbarHandler.showErrorSnackbar('Error sending test notification: $e');
+    }
   }
 
   void _manageNotifications() {
@@ -809,17 +879,25 @@ class _ProfileViewState extends State<ProfileView> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                // Clear all data on logout
-                await StorageService.clearAllData();
-                if (context.mounted) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const OnboardingScreen(),
-                    ),
-                    (Route<dynamic> route) => false,
+                try {
+                  // Sign out using AuthService
+                  await _authService.logout();
+
+                  // Clear all local data using LocalCache
+                  await _localCache.clearAllData();
+
+                  // Navigate to onboarding using NavigationService
+                  _navigationService.pushNamedAndRemoveUntil(
+                    Routes.onboardingRoute,
+                    Routes.splashScreenViewRoute,
                   );
+
+                  _snackbarHandler.showSnackbar('Logged out successfully');
+                } catch (e) {
+                  print('Error during logout: $e');
+                  _snackbarHandler.showErrorSnackbar(
+                      'Error during logout. Please try again.');
                 }
-                _showMessage('Logged out successfully');
               },
               child: Text(
                 'Log Out',
@@ -837,18 +915,6 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.inter(fontWeight: FontWeight.w500),
-        ),
-        backgroundColor: const Color(0xFF667EEA),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
+    _snackbarHandler.showSnackbar(message);
   }
 }

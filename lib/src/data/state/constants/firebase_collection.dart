@@ -13,6 +13,8 @@ class FirebaseCollectionName {
   static const chats = "chats";
   static const carts = "carts";
   static const orders = "orders";
+  static const favorites = "favorites";
+  static const notifications = "notifications";
 
   const FirebaseCollectionName._();
 }
