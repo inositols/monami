@@ -5,7 +5,7 @@ import 'package:monami/firebase_options.dart';
 import 'package:monami/src/presentation/views/product/demo_samples.dart';
 import 'package:monami/src/utils/router/locator.dart';
 import 'package:monami/src/services/storage_service.dart';
-import 'package:device_preview/device_preview.dart' show DevicePreview;
+import 'package:monami/src/data/remote/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +14,14 @@ void main() async {
 
   await setupLocator();
   await StorageService.init();
+
+  // Initialize Firebase Messaging
+  final notificationService = NotificationService();
+  await notificationService.initialize();
+
   await initializeSampleData();
 
   runApp(
-    DevicePreview(builder: (context) => const App()),
+    App(),
   );
 }

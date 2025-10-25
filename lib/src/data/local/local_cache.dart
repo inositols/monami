@@ -36,4 +36,13 @@ abstract class LocalCache {
   Future<void> persistLoginStatus(bool isLoggedIn);
 
   bool getLoginStatus();
+
+  ///Clears all cached data including user data, cart, and login status
+  Future<void> clearAllData();
+
+  ///Saves user profile data
+  Future<void> saveUserProfile(Map<String, dynamic> userProfile);
+
+  ///Clears cart data
+  Future<void> clearCart();
 }

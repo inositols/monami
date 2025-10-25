@@ -9,7 +9,6 @@ class LocalCacheImpl implements LocalCache {
   static const _userId = 'userId';
   static const _privateKey = 'privateEncKey';
   static const _publicKey = 'publicEncKey';
-  static const _savedStories = 'savedstories';
   static const _loginStatus = 'loginStatus';
 
   late SecureStorage _storage;
@@ -131,6 +130,46 @@ class LocalCacheImpl implements LocalCache {
       await _sharedPreferences.setBool(_loginStatus, isLoggedIn);
     } catch (e) {
       _logger.log(e);
+    }
+  }
+
+  @override
+  Future<void> clearAllData() async {
+    try {
+      // Clear secure storage
+      await _storage.delete(_userId);
+      await _storage.delete(_privateKey);
+      await _storage.delete(_publicKey);
+      
+      // Clear shared preferences
+      await _sharedPreferences.clear();
+      
+      _logger.log('All cached data cleared successfully');
+    } catch (e) {
+      _logger.log('Error clearing all data: $e');
+    }
+  }
+
+  @override
+  Future<void> saveUserProfile(Map<String, dynamic> userProfile) async {
+    try {
+      await saveToLocalCache(
+        key: 'user_profile',
+        value: userProfile,
+      );
+      _logger.log('User profile saved successfully');
+    } catch (e) {
+      _logger.log('Error saving user profile: $e');
+    }
+  }
+
+  @override
+  Future<void> clearCart() async {
+    try {
+      await removeFromLocalCache('cart_items');
+      _logger.log('Cart data cleared successfully');
+    } catch (e) {
+      _logger.log('Error clearing cart: $e');
     }
   }
 }

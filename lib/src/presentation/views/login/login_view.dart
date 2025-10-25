@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:monami/enums/auth.dart';
 import 'package:monami/src/presentation/views/login/login_view_model.dart';
 import 'package:monami/src/presentation/widgets/button_loader.dart';
 import 'package:monami/src/presentation/widgets/custom_button.dart';
@@ -8,12 +9,7 @@ import 'package:monami/src/presentation/widgets/custom_textfield.dart';
 import 'package:monami/src/shared/monami_logo.dart';
 import 'component/custom_paint.dart';
 
-enum Status {
-  login,
-  signUp,
-}
-
-Status type = Status.login;
+AuthStatus type = AuthStatus.login;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -30,13 +26,13 @@ class _LoginViewState extends State<LoginView> {
   final _username = TextEditingController();
 
   void _switchType() {
-    if (type == Status.signUp) {
+    if (type == AuthStatus.signUp) {
       setState(() {
-        type = Status.login;
+        type = AuthStatus.login;
       });
     } else {
       setState(() {
-        type = Status.signUp;
+        type = AuthStatus.signUp;
       });
     }
     // print(type);
@@ -63,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
                 return;
               }
 
-              if (type == Status.login) {
+              if (type == AuthStatus.login) {
                 await ref
                     .read(loginViewModelProvider.notifier)
                     .login(email: _email.text, password: _password.text);
@@ -132,14 +128,14 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(
                           height: 10,
                         ),
-                        if (type == Status.signUp)
+                        if (type == AuthStatus.signUp)
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 600),
                             child: CustomTextfield(
                               hintText: "Username",
                               controller: _username,
                               prefixIcon: const Icon(Icons.person),
-                              validator: type == Status.signUp
+                              validator: type == AuthStatus.signUp
                                   ? (value) {
                                       if (value!.isEmpty) {
                                         return 'Username cannot be empty';
@@ -172,7 +168,7 @@ class _LoginViewState extends State<LoginView> {
                                         .watch(loginViewModelProvider)
                                         .loading,
                                     textColor: Colors.black,
-                                    text: type == Status.login
+                                    text: type == AuthStatus.login
                                         ? 'Log in'
                                         : 'Sign up',
                                   ),
@@ -181,14 +177,14 @@ class _LoginViewState extends State<LoginView> {
                                   padding: const EdgeInsets.only(bottom: 24.0),
                                   child: RichText(
                                     text: TextSpan(
-                                      text: type == Status.login
+                                      text: type == AuthStatus.login
                                           ? 'Don\'t have an account? '
                                           : 'Already have an account? ',
                                       style:
                                           const TextStyle(color: Colors.white),
                                       children: [
                                         TextSpan(
-                                            text: type == Status.login
+                                            text: type == AuthStatus.login
                                                 ? 'Sign up now'
                                                 : 'Log in',
                                             style: const TextStyle(

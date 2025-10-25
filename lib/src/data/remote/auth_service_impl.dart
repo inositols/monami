@@ -4,6 +4,7 @@ import 'package:monami/src/data/local/local_cache.dart';
 import 'package:monami/src/data/remote/auth_service.dart';
 import 'package:monami/src/data/state/api_response.dart';
 import 'package:monami/src/data/state/constants/firebase_collection.dart';
+import 'package:monami/src/data/state/constants/firebase_field_name.dart';
 import 'package:monami/src/data/state/user_info/models/user_info_model.dart';
 import 'package:monami/src/utils/logger.dart';
 
@@ -35,16 +36,22 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<UserInfoModel?> getUser(String userId) async {
     try {
-      return await _firestore
+      final querySnapshot = await _firestore
           .collection(FirebaseCollectionName.users)
-          .where("id", isEqualTo: userId)
-          .get()
-          .then((user) => UserInfoModel.fromJson(
-                user.docs.first.data(),
-                user.docs.first.id,
-              ));
+          .where(FirebaseFieldName.userId, isEqualTo: userId)
+          .get();
+      
+      if (querySnapshot.docs.isEmpty) {
+        _logger.log('No user found with userId: $userId');
+        return null;
+      }
+      
+      return UserInfoModel.fromJson(
+        querySnapshot.docs.first.data(),
+        querySnapshot.docs.first.id,
+      );
     } catch (e) {
-      _logger.log(e);
+      _logger.log('Error getting user: $e');
       return null;
     }
   }
@@ -77,7 +84,8 @@ class AuthServiceImpl implements AuthService {
       final appUser = await getUser(user.uid);
 
       if (appUser == null) {
-        throw const ApiErrorResponse(message: "Login failed");
+        _logger.log('User not found in Firestore for UID: ${user.uid}');
+        throw const ApiErrorResponse(message: "User profile not found. Please contact support.");
       }
 
       await _localCache.saveUserId(user.uid);
@@ -102,6 +110,31 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  @override
+  Future<UserInfoModel?> getCurrentUser() async {
+    try {
+      // Get current Firebase Auth user
+      final firebaseUser = _auth.currentUser;
+      if (firebaseUser == null) {
+        _logger.log('No Firebase user found');
+        return null;
+      }
+
+      // Get user details from Firestore
+      final userInfo = await getUser(firebaseUser.uid);
+      if (userInfo == null) {
+        _logger.log('User not found in Firestore for UID: ${firebaseUser.uid}');
+        return null;
+      }
+
+      _logger.log('Successfully retrieved current user: ${userInfo.displayName}');
+      return userInfo;
+    } catch (e) {
+      _logger.log('Error getting current user: $e');
+      return null;
+    }
   }
 
   @override

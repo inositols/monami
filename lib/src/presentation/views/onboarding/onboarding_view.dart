@@ -3,6 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../login/login_view.dart';
 import 'components/model/slide_model.dart';
+import 'package:monami/src/handlers/handlers.dart';
+import 'package:monami/src/data/local/local_cache.dart';
+import 'package:monami/src/data/remote/auth_service.dart';
+import 'package:monami/src/utils/router/locator.dart';
+import 'package:monami/src/utils/router/route_name.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -14,6 +19,12 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
+  
+  // Centralized services
+  late final NavigationService _navigationService = locator<NavigationService>();
+  late final SnackbarHandler _snackbarHandler = locator<SnackbarHandler>();
+  late final LocalCache _localCache = locator<LocalCache>();
+  late final AuthService _authService = locator<AuthService>();
 
   @override
   void dispose() {
@@ -145,10 +156,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             );
                           } else {
                             // Go to login screen when at last slide
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginView()));
+                            _navigationService.pushNamed(Routes.loginRoute);
                           }
                         },
                         child: Container(

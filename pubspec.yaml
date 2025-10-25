@@ -10,40 +10,42 @@ environment:
 
 dependencies:
   animated_text_kit: ^4.2.2
-  cloud_firestore: ^4.13.6
+  cloud_firestore: ^6.0.3
   collection: ^1.17.2
   cupertino_icons: ^1.0.2
   device_preview: 1.3.1
   equatable: ^2.0.5
-  firebase_auth: ^4.15.3
-  firebase_core: ^2.24.2
-  firebase_storage: ^11.5.6
+  firebase_auth: ^6.1.1
+  firebase_core: ^4.2.0
+  firebase_messaging: ^16.0.3
+  firebase_storage: ^13.0.3
+  flutter_local_notifications: ^19.5.0
+  http: ^1.1.0
   flutter:
     sdk: flutter
-  flutter_hooks: ^0.18.6
-  flutter_riverpod: ^2.5.1
-  flutter_secure_storage: ^8.0.0
+  flutter_hooks: ^0.21.3+1
+  flutter_riverpod: ^3.0.3
+  flutter_secure_storage: ^9.2.4
   flutter_svg: ^2.0.9
   font_awesome_flutter: ^10.5.0
   gap: ^3.0.1
-  get_it: ^7.6.0
-  google_fonts: ^5.1.0
-  google_sign_in: ^6.1.6
-  hooks_riverpod: ^2.3.0
+  get_it: ^8.2.0
+  google_fonts: ^6.3.2
+  google_sign_in: ^7.2.0
+  hooks_riverpod: ^3.0.3
   image: ^4.0.17
   image_picker: ^1.0.7
   intl: ^0.20.2
-  lottie: ^2.2.0
-  share_plus: ^7.0.2
+  lottie: ^3.3.1
+  share_plus: ^12.0.1
   shared_preferences: ^2.2.2
   url_launcher: ^6.1.10
-  uuid: ^3.0.7
-  video_player: ^2.6.0
-  video_thumbnail: ^0.5.3
+  uuid: ^4.5.1
+  flutter_paystack_plus: null
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 # dependency_overrides:
 #   win32: ^3.1.4

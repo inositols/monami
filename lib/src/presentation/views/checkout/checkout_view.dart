@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/src/presentation/widgets/custom_button.dart';
+import 'package:monami/src/data/remote/orders_service.dart';
+import 'package:monami/src/data/remote/cart_service.dart';
+
+import 'package:monami/src/utils/router/locator.dart';
+import 'package:monami/src/handlers/handlers.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -26,6 +31,9 @@ class _CheckoutViewState extends State<CheckoutView>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  final _navigationService = locator<NavigationService>();
+  final _snackbarHandler = locator<SnackbarHandler>();
   late Animation<Offset> _slideAnimation;
 
   int selectedPaymentMethod = 0;
@@ -830,12 +838,9 @@ class _CheckoutViewState extends State<CheckoutView>
       isProcessingPayment = true;
     });
 
-    // Simulate payment processing
-    await Future.delayed(const Duration(seconds: 3));
-
-    // Save order to storage
     try {
-      final order = Order(
+      // Create order
+      final order = Orders(
         id: 'ORD${DateTime.now().millisecondsSinceEpoch}',
         items: widget.items
             .map((item) => CartItem(
@@ -851,7 +856,7 @@ class _CheckoutViewState extends State<CheckoutView>
         shipping: widget.shipping,
         tax: widget.tax,
         total: total,
-        status: 'processing',
+        status: 'pending',
         createdAt: DateTime.now(),
         shippingAddress: {
           'title': addresses[selectedAddressIndex].title,
@@ -863,17 +868,53 @@ class _CheckoutViewState extends State<CheckoutView>
         paymentMethod: paymentMethods[selectedPaymentMethod].name,
       );
 
-      await StorageService.saveOrder(order.toJson());
+      // Check if PayPal is selected
+      if (paymentMethods[selectedPaymentMethod].name == 'PayPal') {
+        // Navigate to PayPal payment
+        _navigationService.pushNamed(
+          '/paypal-payment',
+          arguments: {
+            'order': order,
+            'items': widget.items
+                .map((item) => CartItem(
+                      productId: item.id.toString(),
+                      productName: item.name,
+                      price: item.price,
+                      quantity: item.quantity,
+                      image: item.image,
+                      addedAt: DateTime.now(),
+                    ))
+                .toList(),
+          },
+        );
+      } else {
+        // Handle other payment methods (simulate processing)
+        await Future.delayed(const Duration(seconds: 3));
+
+        // Save order using OrdersService (handles both Firebase and local storage)
+        final ordersService = OrdersService();
+        await ordersService.createOrder(order);
+
+        // Clear cart after successful order
+        final cartService = CartService();
+        await cartService.clearCart();
+
+        // Navigate to success page
+        _navigationService.pushNamed('/order-success', arguments: order);
+      }
+
+      setState(() {
+        isProcessingPayment = false;
+      });
     } catch (e) {
-      // Handle error
+      print('Error processing payment: $e');
+      setState(() {
+        isProcessingPayment = false;
+      });
+
+      // Show error dialog
+      _showErrorDialog(e.toString());
     }
-
-    setState(() {
-      isProcessingPayment = false;
-    });
-
-    // Show success dialog
-    _showSuccessDialog();
   }
 
   void _showSuccessDialog() {
@@ -1022,6 +1063,85 @@ class _CheckoutViewState extends State<CheckoutView>
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.error_outline,
+                    color: Colors.red.shade500,
+                    size: 50,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Payment Failed',
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF1A202C),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'There was an error processing your payment. Please try again.',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF718096),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade500,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Try Again',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),

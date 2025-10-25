@@ -12,6 +12,7 @@ class Product {
   final double rating;
   final int reviewCount;
   final DateTime createdAt;
+  final String createdBy;
   final String? brand;
   final Map<String, dynamic>? specifications;
 
@@ -29,6 +30,7 @@ class Product {
     this.rating = 0.0,
     this.reviewCount = 0,
     required this.createdAt,
+    required this.createdBy,
     this.brand,
     this.specifications,
   });
@@ -48,6 +50,7 @@ class Product {
       'rating': rating,
       'reviewCount': reviewCount,
       'createdAt': createdAt.toIso8601String(),
+      'createdBy': createdBy,
       'brand': brand,
       'specifications': specifications,
     };
@@ -68,6 +71,7 @@ class Product {
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
+      createdBy: json['createdBy'] ?? '',
       brand: json['brand'],
       specifications: json['specifications'],
     );
@@ -87,6 +91,7 @@ class Product {
     double? rating,
     int? reviewCount,
     DateTime? createdAt,
+    String? createdBy,
     String? brand,
     Map<String, dynamic>? specifications,
   }) {
@@ -104,6 +109,7 @@ class Product {
       rating: rating ?? this.rating,
       reviewCount: reviewCount ?? this.reviewCount,
       createdAt: createdAt ?? this.createdAt,
+      createdBy: createdBy ?? this.createdBy,
       brand: brand ?? this.brand,
       specifications: specifications ?? this.specifications,
     );
@@ -160,7 +166,7 @@ class CartItem {
   double get totalPrice => price * quantity;
 }
 
-class Order {
+class Orders {
   final String id;
   final List<CartItem> items;
   final double subtotal;
@@ -171,8 +177,10 @@ class Order {
   final DateTime createdAt;
   final Map<String, dynamic> shippingAddress;
   final String paymentMethod;
+  final String? paymentId;
+  final DateTime? completedAt;
 
-  Order({
+  Orders({
     required this.id,
     required this.items,
     required this.subtotal,
@@ -183,6 +191,8 @@ class Order {
     required this.createdAt,
     required this.shippingAddress,
     required this.paymentMethod,
+    this.paymentId,
+    this.completedAt,
   });
 
   Map<String, dynamic> toJson() {
@@ -197,11 +207,13 @@ class Order {
       'createdAt': createdAt.toIso8601String(),
       'shippingAddress': shippingAddress,
       'paymentMethod': paymentMethod,
+      'paymentId': paymentId,
+      'completedAt': completedAt?.toIso8601String(),
     };
   }
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
+  factory Orders.fromJson(Map<String, dynamic> json) {
+    return Orders(
       id: json['id'],
       items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))
@@ -214,6 +226,41 @@ class Order {
       createdAt: DateTime.parse(json['createdAt']),
       shippingAddress: json['shippingAddress'],
       paymentMethod: json['paymentMethod'],
+      paymentId: json['paymentId'],
+      completedAt: json['completedAt'] != null 
+          ? DateTime.parse(json['completedAt']) 
+          : null,
+    );
+  }
+
+  /// Create a copy with updated fields
+  Orders copyWith({
+    String? id,
+    List<CartItem>? items,
+    double? subtotal,
+    double? shipping,
+    double? tax,
+    double? total,
+    String? status,
+    DateTime? createdAt,
+    Map<String, dynamic>? shippingAddress,
+    String? paymentMethod,
+    String? paymentId,
+    DateTime? completedAt,
+  }) {
+    return Orders(
+      id: id ?? this.id,
+      items: items ?? this.items,
+      subtotal: subtotal ?? this.subtotal,
+      shipping: shipping ?? this.shipping,
+      tax: tax ?? this.tax,
+      total: total ?? this.total,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentId: paymentId ?? this.paymentId,
+      completedAt: completedAt ?? this.completedAt,
     );
   }
 }

@@ -10,12 +10,21 @@ import 'package:monami/src/presentation/widgets/custom_textfield.dart';
 // import 'package:monami/src/data/state/post_settings/providers/post_settings_provider.dart';
 import 'package:monami/src/utils/constants/app_colors.dart';
 import 'package:monami/src/utils/constants/app_images.dart';
+import 'package:monami/src/handlers/handlers.dart';
+import 'package:monami/src/data/local/local_cache.dart';
+import 'package:monami/src/data/remote/auth_service.dart';
+import 'package:monami/src/utils/router/locator.dart';
+import 'package:monami/src/utils/router/route_name.dart';
 
 import 'dart:developer' as devtools show log;
 
 import '../product/product_detail_view.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
+import '../../../data/remote/product_service.dart';
+import '../../../data/remote/cart_service.dart';
+import '../../../data/remote/favorites_service.dart';
+import '../../../presentation/widgets/enhanced_product_card.dart';
 
 extension Log on Object {
   void log() => devtools.log(toString());
@@ -33,7 +42,51 @@ final GlobalKey<_HomeViewState> homeViewKey = GlobalKey<_HomeViewState>();
 
 class _HomeViewState extends ConsumerState<HomeView> {
   List<Product> products = [];
+  List<Product> filteredProducts = [];
   bool isLoading = true;
+  String searchQuery = '';
+  String selectedCategory = 'All';
+  String selectedPriceRange = 'All';
+  double minPrice = 0.0;
+  double maxPrice = 1000.0;
+  
+  final TextEditingController _searchController = TextEditingController();
+  
+  // Services
+  final ProductService _productService = ProductService();
+  final CartService _cartService = CartService();
+  final FavoritesService _favoritesService = FavoritesService();
+  
+  // Centralized services
+  late final NavigationService _navigationService = locator<NavigationService>();
+  late final SnackbarHandler _snackbarHandler = locator<SnackbarHandler>();
+  late final LocalCache _localCache = locator<LocalCache>();
+  late final AuthService _authService = locator<AuthService>();
+  
+  // Available categories
+  final List<String> categories = [
+    'All',
+    'Electronics',
+    'Fashion',
+    'Home & Garden',
+    'Sports & Fitness',
+    'Books',
+    'Beauty & Health',
+    'Toys & Games',
+    'Automotive',
+    'Food & Beverages',
+    'Other'
+  ];
+  
+  // Price ranges
+  final List<Map<String, dynamic>> priceRanges = [
+    {'label': 'All', 'min': 0.0, 'max': 10000.0},
+    {'label': 'Under \$25', 'min': 0.0, 'max': 25.0},
+    {'label': '\$25 - \$50', 'min': 25.0, 'max': 50.0},
+    {'label': '\$50 - \$100', 'min': 50.0, 'max': 100.0},
+    {'label': '\$100 - \$200', 'min': 100.0, 'max': 200.0},
+    {'label': 'Over \$200', 'min': 200.0, 'max': 10000.0},
+  ];
 
   @override
   void initState() {
@@ -41,12 +94,33 @@ class _HomeViewState extends ConsumerState<HomeView> {
     _loadProducts();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadProducts() async {
     try {
-      final productsData = await StorageService.getProducts();
-      products = productsData.map((data) => Product.fromJson(data)).toList();
+      final productService = ProductService();
+      
+      // Try to load from Firebase first, then fallback to local storage
+      try {
+        products = await productService.getProductsFromFirebase();
+        // Sync with local storage for offline access
+        await productService.syncLocalProductsWithFirebase();
+      } catch (firebaseError) {
+        print('Firebase error, loading from local storage: $firebaseError');
+        // Fallback to local storage if Firebase fails
+        final productsData = await StorageService.getProducts();
+        products = productsData.map((data) => Product.fromJson(data)).toList();
+      }
+      
+      // Initialize filtered products
+      filteredProducts = List.from(products);
     } catch (e) {
-      // Handle error
+      print('Error loading products: $e');
+      // Handle error - products list will remain empty
     } finally {
       setState(() {
         isLoading = false;
@@ -60,6 +134,274 @@ class _HomeViewState extends ConsumerState<HomeView> {
       isLoading = true;
     });
     _loadProducts();
+  }
+
+  // Navigate to product details
+  void _navigateToProductDetail(Product product) {
+    _navigationService.pushNamed(
+      Routes.productDetailRoute,
+      arguments: {
+        'image': product.images.isNotEmpty ? product.images.first : 'assets/images/bag_1.png',
+        'title': product.name,
+        'subtitle': product.description,
+        'price': '\$${product.price.toStringAsFixed(2)}',
+        'rating': product.rating,
+        'reviews': product.reviewCount,
+        'productId': product.id,
+      },
+    );
+  }
+
+  // Filter products based on search query, category, and price range
+  void _filterProducts() {
+    setState(() {
+      filteredProducts = products.where((product) {
+        // Search filter
+        bool matchesSearch = searchQuery.isEmpty ||
+            product.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+            product.description.toLowerCase().contains(searchQuery.toLowerCase()) ||
+            product.category.toLowerCase().contains(searchQuery.toLowerCase());
+
+        // Category filter
+        bool matchesCategory = selectedCategory == 'All' ||
+            product.category == selectedCategory;
+
+        // Price range filter
+        bool matchesPrice = true;
+        if (selectedPriceRange != 'All') {
+          final priceRange = priceRanges.firstWhere(
+            (range) => range['label'] == selectedPriceRange,
+            orElse: () => {'min': 0.0, 'max': 10000.0},
+          );
+          matchesPrice = product.price >= priceRange['min'] &&
+              product.price <= priceRange['max'];
+        }
+
+        return matchesSearch && matchesCategory && matchesPrice;
+      }).toList();
+    });
+  }
+
+  // Handle search input
+  void _onSearchChanged(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+    _filterProducts();
+  }
+
+  // Show filter bottom sheet
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Filter Products',
+                    style: GoogleFonts.inter(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF2D3748),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = 'All';
+                        selectedPriceRange = 'All';
+                      });
+                      _filterProducts();
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Clear All',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red.shade600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Category Filter
+                    Text(
+                      'Category',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2D3748),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: categories.map((category) {
+                        final isSelected = selectedCategory == category;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedCategory = category;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFF667EEA)
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected
+                                    ? const Color(0xFF667EEA)
+                                    : Colors.grey.shade300,
+                              ),
+                            ),
+                            child: Text(
+                              category,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected
+                                    ? Colors.white
+                                    : const Color(0xFF2D3748),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Price Range Filter
+                    Text(
+                      'Price Range',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2D3748),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: priceRanges.map((range) {
+                        final isSelected = selectedPriceRange == range['label'];
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedPriceRange = range['label'];
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFF667EEA)
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected
+                                    ? const Color(0xFF667EEA)
+                                    : Colors.grey.shade300,
+                              ),
+                            ),
+                            child: Text(
+                              range['label'],
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected
+                                    ? Colors.white
+                                    : const Color(0xFF2D3748),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Apply Button
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _filterProducts();
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF667EEA),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Apply Filters',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -139,12 +481,31 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       ),
                     ],
                   ),
-                  child: CustomTextfield(
-                    hintText: "Search any Product...",
-                    prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
-                    suffixIcon: Icon(Icons.mic, color: Colors.grey.shade400),
-                    fillColor: Colors.white,
-                    hasBorderside: false,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: _onSearchChanged,
+                    decoration: InputDecoration(
+                      hintText: "Search any Product...",
+                      hintStyle: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
+                      suffixIcon: searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(Icons.clear, color: Colors.grey.shade400),
+                              onPressed: () {
+                                _searchController.clear();
+                                _onSearchChanged('');
+                              },
+                            )
+                          : Icon(Icons.mic, color: Colors.grey.shade400),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -158,65 +519,41 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      isLoading ? "Loading..." : "${products.length} Items",
+                      isLoading 
+                          ? "Loading..." 
+                          : "${filteredProducts.length} Items${searchQuery.isNotEmpty || selectedCategory != 'All' || selectedPriceRange != 'All' ? ' (Filtered)' : ''}",
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xFF2D3748),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Sort",
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF2D3748),
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Icon(Icons.swap_vert,
-                                  size: 16, color: Colors.grey.shade600),
-                            ],
-                          ),
+                    GestureDetector(
+                      onTap: _showFilterBottomSheet,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Filter",
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF2D3748),
-                                ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Filter",
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF2D3748),
                               ),
-                              const SizedBox(width: 4),
-                              Icon(Icons.tune,
-                                  size: 16, color: Colors.grey.shade600),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(Icons.tune,
+                                size: 16, color: Colors.grey.shade600),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -233,7 +570,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       ),
                     ),
                   )
-                : products.isEmpty
+                : filteredProducts.isEmpty
                     ? SliverToBoxAdapter(
                         child: Center(
                           child: Padding(
@@ -241,13 +578,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             child: Column(
                               children: [
                                 Icon(
-                                  Icons.inventory_2_outlined,
+                                  searchQuery.isNotEmpty || selectedCategory != 'All' || selectedPriceRange != 'All'
+                                      ? Icons.search_off
+                                      : Icons.inventory_2_outlined,
                                   size: 64,
                                   color: Colors.grey.shade400,
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'No Products Available',
+                                  searchQuery.isNotEmpty || selectedCategory != 'All' || selectedPriceRange != 'All'
+                                      ? 'No Products Found'
+                                      : 'No Products Available',
                                   style: GoogleFonts.inter(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -256,12 +597,42 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Create products from the profile section',
+                                  searchQuery.isNotEmpty || selectedCategory != 'All' || selectedPriceRange != 'All'
+                                      ? 'Try adjusting your search or filters'
+                                      : 'Create products from the profile section',
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: Colors.grey.shade500,
                                   ),
                                 ),
+                                if (searchQuery.isNotEmpty || selectedCategory != 'All' || selectedPriceRange != 'All') ...[
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        searchQuery = '';
+                                        selectedCategory = 'All';
+                                        selectedPriceRange = 'All';
+                                        _searchController.clear();
+                                      });
+                                      _filterProducts();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF667EEA),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Clear Filters',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                           ),
@@ -273,18 +644,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 0.75,
+                            childAspectRatio: 0.7,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
                           ),
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
-                              final product = products[index];
-                              return _buildProductCard(
+                              final product = filteredProducts[index];
+                              return EnhancedProductCard(
                                 product: product,
+                                onTap: () => _navigateToProductDetail(product),
+                                onCartAdded: () {
+                                  // Refresh cart count if needed
+                                },
+                                onFavoriteToggled: () {
+                                  // Refresh favorites if needed
+                                },
                               );
                             },
-                            childCount: products.length,
+                            childCount: filteredProducts.length,
                           ),
                         ),
                       ),
@@ -303,41 +681,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     required Product product,
   }) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                ProductDetailView(
-              image: product.images.isNotEmpty
-                  ? product.images.first
-                  : 'assets/images/bag_1.png',
-              title: product.name,
-              subtitle: product.description,
-              price: '\$${product.price.toStringAsFixed(2)}',
-              rating: product.rating,
-              reviews: product.reviewCount,
-              productId: product.id,
-            ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              const begin = Offset(0.0, 1.0);
-              const end = Offset.zero;
-              const curve = Curves.easeInOutCubic;
-
-              var tween = Tween(begin: begin, end: end).chain(
-                CurveTween(curve: curve),
-              );
-
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
-      },
+      onTap: () => _navigateToProductDetail(product),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
