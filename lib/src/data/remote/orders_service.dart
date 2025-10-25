@@ -201,6 +201,44 @@ class OrdersService {
     }
   }
 
+  /// Update entire order
+  Future<void> updateOrder(Orders order) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        throw Exception('User not authenticated');
+      }
+
+      // Update in Firebase
+      await _firestore
+          .collection(FirebaseCollectionName.orders)
+          .doc(order.id)
+          .update({
+        'id': order.id,
+        'items': order.items.map((item) => item.toJson()).toList(),
+        'subtotal': order.subtotal,
+        'shipping': order.shipping,
+        'tax': order.tax,
+        'total': order.total,
+        'status': order.status,
+        'createdAt': order.createdAt.toIso8601String(),
+        'shippingAddress': order.shippingAddress,
+        'paymentMethod': order.paymentMethod,
+        'paymentId': order.paymentId,
+        'completedAt': order.completedAt?.toIso8601String(),
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+
+      // Update in local storage
+      await StorageService.saveOrder(order.toJson());
+
+      _logger.log('Order updated successfully: ${order.id}');
+    } catch (e) {
+      _logger.log('Error updating order: $e');
+      throw Exception('Failed to update order: $e');
+    }
+  }
+
   /// Get orders by status
   Future<List<Orders>> getOrdersByStatus(String status) async {
     try {

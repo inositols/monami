@@ -27,6 +27,7 @@ class Routes {
   
   // Payment routes
   static const paymentRoute = '/payment';
+  static const paypalPaymentRoute = '/paypal-payment';
   
   // Notification routes
   static const notificationsRoute = '/notifications';

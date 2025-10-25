@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:monami/src/presentation/views/view_models/base_model.dart';
 import 'package:monami/src/utils/router/route_name.dart';
 import 'package:monami/src/data/remote/auth_debug_helper.dart';
@@ -27,7 +27,7 @@ class LoginViewModel extends BaseViewModel {
 
       // Debug login process
       await AuthDebugHelper.debugLogin(email, password);
-      
+
       await authService.login(email: email, password: password);
       toggleLoading(false);
       navigationHandler.pushReplacementNamed(Routes.homeViewRoute);

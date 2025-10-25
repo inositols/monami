@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:monami/src/data/state/post_settings/models/post_settings.dart';
 import 'package:monami/src/data/state/post_settings/notifier/post_setting_notifer.dart';

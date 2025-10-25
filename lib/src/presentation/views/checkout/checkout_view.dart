@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monami/src/presentation/widgets/custom_button.dart';
 import 'package:monami/src/data/remote/orders_service.dart';
 import 'package:monami/src/data/remote/cart_service.dart';
+
+import 'package:monami/src/utils/router/locator.dart';
+import 'package:monami/src/handlers/handlers.dart';
 import '../../../models/product_model.dart';
 import '../../../services/storage_service.dart';
 
@@ -28,6 +31,9 @@ class _CheckoutViewState extends State<CheckoutView>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  final _navigationService = locator<NavigationService>();
+  final _snackbarHandler = locator<SnackbarHandler>();
   late Animation<Offset> _slideAnimation;
 
   int selectedPaymentMethod = 0;
@@ -833,9 +839,6 @@ class _CheckoutViewState extends State<CheckoutView>
     });
 
     try {
-      // Simulate payment processing
-      await Future.delayed(const Duration(seconds: 3));
-
       // Create order
       final order = Orders(
         id: 'ORD${DateTime.now().millisecondsSinceEpoch}',
@@ -853,7 +856,7 @@ class _CheckoutViewState extends State<CheckoutView>
         shipping: widget.shipping,
         tax: widget.tax,
         total: total,
-        status: 'processing',
+        status: 'pending',
         createdAt: DateTime.now(),
         shippingAddress: {
           'title': addresses[selectedAddressIndex].title,
@@ -865,20 +868,44 @@ class _CheckoutViewState extends State<CheckoutView>
         paymentMethod: paymentMethods[selectedPaymentMethod].name,
       );
 
-      // Save order using OrdersService (handles both Firebase and local storage)
-      final ordersService = OrdersService();
-      await ordersService.createOrder(order);
+      // Check if PayPal is selected
+      if (paymentMethods[selectedPaymentMethod].name == 'PayPal') {
+        // Navigate to PayPal payment
+        _navigationService.pushNamed(
+          '/paypal-payment',
+          arguments: {
+            'order': order,
+            'items': widget.items
+                .map((item) => CartItem(
+                      productId: item.id.toString(),
+                      productName: item.name,
+                      price: item.price,
+                      quantity: item.quantity,
+                      image: item.image,
+                      addedAt: DateTime.now(),
+                    ))
+                .toList(),
+          },
+        );
+      } else {
+        // Handle other payment methods (simulate processing)
+        await Future.delayed(const Duration(seconds: 3));
 
-      // Clear cart after successful order
-      final cartService = CartService();
-      await cartService.clearCart();
+        // Save order using OrdersService (handles both Firebase and local storage)
+        final ordersService = OrdersService();
+        await ordersService.createOrder(order);
+
+        // Clear cart after successful order
+        final cartService = CartService();
+        await cartService.clearCart();
+
+        // Navigate to success page
+        _navigationService.pushNamed('/order-success', arguments: order);
+      }
 
       setState(() {
         isProcessingPayment = false;
       });
-
-      // Show success dialog
-      _showSuccessDialog();
     } catch (e) {
       print('Error processing payment: $e');
       setState(() {

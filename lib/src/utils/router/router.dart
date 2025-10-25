@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:monami/src/presentation/views/payment/payment_view.dart';
 import 'package:monami/src/utils/router/route_name.dart';
 import 'package:monami/src/presentation/views/bottomnavigation/bottom_navigation_screen.dart';
 import 'package:monami/src/presentation/views/login/login_view.dart';
@@ -15,6 +16,7 @@ import 'package:monami/src/presentation/views/product/product_detail_view.dart';
 import 'package:monami/src/presentation/views/cart/cart_view.dart';
 import 'package:monami/src/presentation/views/checkout/checkout_view.dart';
 import 'package:monami/src/presentation/views/payment/payment_selection_view.dart';
+
 import 'package:monami/src/presentation/views/notifications/notifications_view.dart';
 import 'package:monami/src/models/product_model.dart';
 
@@ -32,7 +34,7 @@ class RouteGenerator {
       case Routes.loginViewRoute:
       case Routes.loginRoute:
         return _getPageRoute(const LoginView());
-      
+
       // Profile routes
       case Routes.editProfileRoute:
         return _getPageRoute(const EditProfileView());
@@ -42,13 +44,13 @@ class RouteGenerator {
         return _getPageRoute(const OrderHistoryView());
       case Routes.userDashboardRoute:
         return _getPageRoute(const UserDashboardView());
-      
+
       // Product routes
       case Routes.createProductRoute:
         return _getPageRoute(const CreateProductView());
       case Routes.productDetailRoute:
         return _getPageRoute(_buildProductDetailView(settings.arguments));
-      
+
       // Cart and checkout routes
       case Routes.cartRoute:
         return _getPageRoute(const CartView());
@@ -56,11 +58,13 @@ class RouteGenerator {
         return _getPageRoute(_buildCheckoutView(settings.arguments));
       case Routes.orderSuccessRoute:
         return _getPageRoute(_buildOrderSuccessView(settings.arguments));
-      
+
       // Payment routes
       case Routes.paymentRoute:
         return _getPageRoute(_buildPaymentView(settings.arguments));
-      
+      // case Routes.paypalPaymentRoute:
+      //   return _getPageRoute(_buildPayPalPaymentView(settings.arguments));
+
       // Notification routes
       case Routes.notificationsRoute:
         return _getPageRoute(const NotificationsView());
@@ -153,14 +157,13 @@ class RouteGenerator {
 
   static Widget _buildPaymentView(dynamic arguments) {
     if (arguments is Map<String, dynamic>) {
-      return PaymentSelectionView(
-        cartItems: List<CartItem>.from(arguments['items'] ?? []),
-        totalAmount: arguments['total'] ?? 0.0,
+      return PaymentView(
+        order: arguments['order'],
+        items: arguments['items'],
       );
     }
-    return const PaymentSelectionView(
-      cartItems: [],
-      totalAmount: 0.0,
-    );
+    // Return an error page when payment arguments are missing to avoid passing null
+    // to a non-nullable Orders parameter.
+    return _errorPage(message: 'Missing payment arguments');
   }
 }

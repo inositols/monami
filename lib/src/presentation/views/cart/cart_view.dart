@@ -21,9 +21,10 @@ class _CartViewState extends State<CartView> with TickerProviderStateMixin {
 
   List<CartItem> cartItems = [];
   bool isLoading = true;
-  
+
   // Centralized services
-  late final NavigationService _navigationService = locator<NavigationService>();
+  late final NavigationService _navigationService =
+      locator<NavigationService>();
   late final SnackbarHandler _snackbarHandler = locator<SnackbarHandler>();
   late final LocalCache _localCache = locator<LocalCache>();
   late final AuthService _authService = locator<AuthService>();
@@ -65,7 +66,7 @@ class _CartViewState extends State<CartView> with TickerProviderStateMixin {
   Future<void> _loadCartItems() async {
     try {
       final cartService = CartService();
-      
+
       // Try to load from Firebase first, then fallback to local storage
       try {
         cartItems = await cartService.getCartItems();
@@ -151,7 +152,8 @@ class _CartViewState extends State<CartView> with TickerProviderStateMixin {
                   removeCart: () async {
                     try {
                       final cartService = CartService();
-                      await cartService.removeFromCart(cartItems[index].productId);
+                      await cartService
+                          .removeFromCart(cartItems[index].productId);
                       await _loadCartItems(); // Reload cart
                       if (mounted) {
                         _snackbarHandler.showSnackbar("Item removed from cart");
@@ -159,7 +161,8 @@ class _CartViewState extends State<CartView> with TickerProviderStateMixin {
                     } catch (e) {
                       print('Error removing from cart: $e');
                       if (mounted) {
-                        _snackbarHandler.showErrorSnackbar("Error removing item from cart");
+                        _snackbarHandler
+                            .showErrorSnackbar("Error removing item from cart");
                       }
                     }
                   },
@@ -169,36 +172,41 @@ class _CartViewState extends State<CartView> with TickerProviderStateMixin {
           ),
         ),
         OrderSummaryWidget(
-          subtotal: subtotal,
-          tax: tax,
-          total: total,
-          shipping: shipping,
-          onPressed: () async {
-            final result = await _navigationService.pushNamed(
-              Routes.checkoutRoute,
-              arguments: {
-                'items': cartItems
-                    .map((item) => CheckoutItem(
-                          id: int.parse(item.productId),
-                          name: item.productName,
-                          price: item.price,
-                          quantity: item.quantity,
-                          image: item.image,
-                        ))
-                    .toList(),
-                'subtotal': subtotal,
-                'shipping': shipping,
-                'tax': tax,
-              },
-            );
+            subtotal: subtotal,
+            tax: tax,
+            total: total,
+            shipping: shipping,
+            onPressed: () async {
+              Orders order = Orders(
+                id: 'ORDER_${DateTime.now().millisecondsSinceEpoch}',
+                items: cartItems,
+                subtotal: subtotal,
+                shipping: shipping,
+                tax: tax,
+                total: total,
+                status: 'pending',
+                createdAt: DateTime.now(),
+                shippingAddress: {
+                  'street': '123 Main St',
+                  'city': 'City',
+                  'country': 'Country',
+                },
+                paymentMethod: 'paystack',
+              );
 
-            // If checkout was successful, clear cart and reload
-            if (result == true) {
-              await _localCache.clearCart();
-              await _loadCartItems();
-            }
-          },
-        ),
+              final result = await _navigationService.pushNamed(
+                Routes.paymentRoute,
+                arguments: {
+                  'order': order,
+                  'items': cartItems,
+                },
+              );
+
+              if (result == true) {
+                await _localCache.clearCart();
+                await _loadCartItems();
+              }
+            }),
       ],
     );
   }

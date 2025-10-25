@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:monami/src/data/state/constants/firebase_collection.dart';
 import 'package:monami/src/data/state/constants/firebase_field_name.dart';
-import 'package:monami/src/data/state/post/typedefs/user_id.dart';
 import 'package:monami/src/data/state/user_info/models/user_info_model.dart';
+import 'package:monami/src/data/state/user_info/typedefs/user_id.dart';
 
 final userInfoModelProvider = StreamProvider.family
     .autoDispose<UserInfoModel, UserId?>((ref, UserId? userId) {

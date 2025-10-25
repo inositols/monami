@@ -177,6 +177,8 @@ class Orders {
   final DateTime createdAt;
   final Map<String, dynamic> shippingAddress;
   final String paymentMethod;
+  final String? paymentId;
+  final DateTime? completedAt;
 
   Orders({
     required this.id,
@@ -189,6 +191,8 @@ class Orders {
     required this.createdAt,
     required this.shippingAddress,
     required this.paymentMethod,
+    this.paymentId,
+    this.completedAt,
   });
 
   Map<String, dynamic> toJson() {
@@ -203,6 +207,8 @@ class Orders {
       'createdAt': createdAt.toIso8601String(),
       'shippingAddress': shippingAddress,
       'paymentMethod': paymentMethod,
+      'paymentId': paymentId,
+      'completedAt': completedAt?.toIso8601String(),
     };
   }
 
@@ -220,6 +226,41 @@ class Orders {
       createdAt: DateTime.parse(json['createdAt']),
       shippingAddress: json['shippingAddress'],
       paymentMethod: json['paymentMethod'],
+      paymentId: json['paymentId'],
+      completedAt: json['completedAt'] != null 
+          ? DateTime.parse(json['completedAt']) 
+          : null,
+    );
+  }
+
+  /// Create a copy with updated fields
+  Orders copyWith({
+    String? id,
+    List<CartItem>? items,
+    double? subtotal,
+    double? shipping,
+    double? tax,
+    double? total,
+    String? status,
+    DateTime? createdAt,
+    Map<String, dynamic>? shippingAddress,
+    String? paymentMethod,
+    String? paymentId,
+    DateTime? completedAt,
+  }) {
+    return Orders(
+      id: id ?? this.id,
+      items: items ?? this.items,
+      subtotal: subtotal ?? this.subtotal,
+      shipping: shipping ?? this.shipping,
+      tax: tax ?? this.tax,
+      total: total ?? this.total,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentId: paymentId ?? this.paymentId,
+      completedAt: completedAt ?? this.completedAt,
     );
   }
 }

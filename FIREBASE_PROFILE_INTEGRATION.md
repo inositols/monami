@@ -199,3 +199,5 @@ await StorageService.clearAllData();
 
 The ProfileView now provides a robust, real-time user experience with proper Firebase integration while maintaining backward compatibility with local storage fallbacks.
 
+
+
