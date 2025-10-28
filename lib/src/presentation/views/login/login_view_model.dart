@@ -1,60 +1,30 @@
-import 'dart:convert';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monami/src/presentation/views/login/login_state.dart';
 import 'package:monami/src/presentation/views/view_models/base_model.dart';
 import 'package:monami/src/utils/router/route_name.dart';
-import 'package:monami/src/data/remote/auth_debug_helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-final loginViewModelProvider = ChangeNotifierProvider((_) {
+final loginViewModelProvider = NotifierProvider<LoginViewModel, LoginState>(() {
   return LoginViewModel();
 });
 
-class LoginViewModel extends BaseViewModel {
+class LoginViewModel extends Notifier<LoginState> with BaseViewModel {
+  @override
+  LoginState build() {
+    return const LoginState();
+  }
+
   Future<void> login({
     required String email,
     required String password,
   }) async {
+    state = state.copyWith(isLoading: true);
     try {
-      toggleLoading(true);
-
-      // Demo credentials for testing
-      if (email == 'demo@monami.com' && password == 'demo123') {
-        await _saveTestUserProfile();
-        toggleLoading(false);
-        navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
-        return;
-      }
-
-      // Debug login process
-      await AuthDebugHelper.debugLogin(email, password);
-
       await authService.login(email: email, password: password);
-      toggleLoading(false);
+      state = state.copyWith(isLoading: false);
       navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
     } catch (e) {
-      toggleLoading(false);
+      state = state.copyWith(isLoading: false, error: e.toString());
       handleError(e);
-    }
-  }
-
-  Future<void> _saveTestUserProfile() async {
-    try {
-      final userProfile = {
-        'id': 'demo_user_123',
-        'name': 'Demo User',
-        'email': 'demo@monami.com',
-        'phone': '+234 801 234 5678',
-        'status': 'active',
-        'role': 'user',
-        'lastLogin': DateTime.now().toIso8601String(),
-      };
-
-      // Use LocalCache for better data persistence
-      await localCache.saveUserProfile(userProfile);
-      await localCache.persistLoginStatus(true);
-    } catch (e) {
-      print('Error saving test user profile: $e');
-      showErrorSnackBar('Error saving user profile');
     }
   }
 
@@ -63,14 +33,17 @@ class LoginViewModel extends BaseViewModel {
     required String username,
     required String password,
   }) async {
+    state = state.copyWith(isLoading: true);
     try {
-      toggleLoading(true);
       await authService.signUp(
-          email: email, password: password, username: username);
-      toggleLoading(false);
+        email: email,
+        password: password,
+        username: username,
+      );
+      state = state.copyWith(isLoading: false);
       navigationHandler.pushReplacementNamed(Routes.homeViewRoute);
     } catch (e) {
-      toggleLoading(false);
+      state = state.copyWith(isLoading: false, error: e.toString());
       handleError(e);
     }
   }
