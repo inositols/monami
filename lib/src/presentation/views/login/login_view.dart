@@ -54,6 +54,8 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
           child: Consumer(builder: (context, ref, _) {
+            final state = ref.watch(loginViewModelProvider);
+
             Future<void> onPressedFunction() async {
               if (!_formKey.currentState!.validate()) {
                 return;
@@ -156,17 +158,14 @@ class _LoginViewState extends State<LoginView> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CustomButton(
-                                  isLoading:
-                                      ref.watch(loginViewModelProvider).loading,
+                                  isLoading: state.isLoading,
                                   onPressed: () {
                                     onPressedFunction();
                                   },
                                   radius: 10,
                                   color: Colors.white,
                                   child: ButtonLoader(
-                                    isLoading: ref
-                                        .watch(loginViewModelProvider)
-                                        .loading,
+                                    isLoading: state.isLoading,
                                     textColor: Colors.black,
                                     text: type == AuthStatus.login
                                         ? 'Log in'
