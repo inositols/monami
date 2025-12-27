@@ -5,7 +5,7 @@ class PaystackPlusService {
   static const String publicKey =
       "pk_test_c0e443cac2fea129a33b802ec7a3b25fe6e72791";
   static const String secretKey =
-      "sk_test_b5adf7fee6e8755de201bc9a228a2732c84d6a7f"; // Temporary in dev only
+      "sk_test_b5adf7fee6e8755de201bc9a228a2732c84d6a7f";
 
   Future<void> startPayment({
     required BuildContext context,
