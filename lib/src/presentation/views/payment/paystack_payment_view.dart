@@ -490,3 +490,4 @@ class _PaystackPaymentViewState extends State<PaystackPaymentView> {
     }
   }
 }
+
